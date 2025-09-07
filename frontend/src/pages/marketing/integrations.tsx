@@ -72,7 +72,7 @@ const ServiceIcon = ({ serviceName, className = "w-8 h-8" }: { serviceName: stri
         <img 
           src={iconUrl} 
           alt={serviceName}
-          className="w-5 h-5 object-contain"
+          className="w-5 h-5 object-contain filter dark:brightness-0 dark:invert"
           onError={(e) => {
             e.currentTarget.style.display = 'none';
             e.currentTarget.nextElementSibling?.classList.remove('hidden');
