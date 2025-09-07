@@ -2,7 +2,93 @@ import { MarketingLayout } from '@/components/layout/marketing-layout'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { ExternalLink, CheckCircle } from 'lucide-react'
+import { ExternalLink, CheckCircle, Settings } from 'lucide-react'
+
+// Service icon mapping - using actual service icons from CDN
+const getServiceIcon = (serviceName: string) => {
+  const iconMap: Record<string, string> = {
+    // Monitoring & Observability
+    'Prometheus': 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/prometheus.svg',
+    'Datadog': 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/datadog.svg',
+    'New Relic': 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/newrelic.svg',
+    'Grafana': 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/grafana.svg',
+    'Splunk': 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/splunk.svg',
+    'Elastic': 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/elasticsearch.svg',
+    
+    // Incident Management
+    'PagerDuty': 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/pagerduty.svg',
+    'Opsgenie': 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/opsgenie.svg',
+    'VictorOps': 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/splunk.svg', // VictorOps is now part of Splunk
+    'xMatters': 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/xmatters.svg',
+    
+    // Ticketing & ITSM
+    'ServiceNow': 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/servicenow.svg',
+    'Jira Service Management': 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/jira.svg',
+    'Zendesk': 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/zendesk.svg',
+    'Freshservice': 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/freshworks.svg',
+    
+    // Cloud Platforms
+    'AWS': 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/amazonaws.svg',
+    'Google Cloud': 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/googlecloud.svg',
+    'Microsoft Azure': 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/microsoftazure.svg',
+    'Digital Ocean': 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/digitalocean.svg',
+    'Kubernetes': 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/kubernetes.svg',
+    
+    // CI/CD & DevOps
+    'GitHub': 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/github.svg',
+    'GitLab': 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/gitlab.svg',
+    'Jenkins': 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/jenkins.svg',
+    'CircleCI': 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/circleci.svg',
+    'GitHub Actions': 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/githubactions.svg',
+    
+    // Communication
+    'Slack': 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/slack.svg',
+    'Microsoft Teams': 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/microsoftteams.svg',
+    'Discord': 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/discord.svg',
+    'Email': 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/gmail.svg', // Using Gmail as generic email icon
+    
+    // Databases
+    'PostgreSQL': 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/postgresql.svg',
+    'MySQL': 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/mysql.svg',
+    'MongoDB': 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/mongodb.svg',
+    'Redis': 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/redis.svg',
+    
+    // Security & Error Tracking
+    'Sentry': 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/sentry.svg',
+    'Rollbar': 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/rollbar.svg',
+    'Bugsnag': 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/bugsnag.svg',
+    'Honeycomb': 'https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/honeycomb.svg',
+  };
+  
+  return iconMap[serviceName];
+};
+
+const ServiceIcon = ({ serviceName, className = "w-8 h-8" }: { serviceName: string; className?: string }) => {
+  const iconUrl = getServiceIcon(serviceName);
+  
+  if (iconUrl) {
+    return (
+      <div className={`${className} relative flex items-center justify-center rounded-lg bg-white dark:bg-gray-800 p-1.5 border border-gray-200 dark:border-gray-700 shadow-sm`}>
+        <img 
+          src={iconUrl} 
+          alt={serviceName}
+          className="w-5 h-5 object-contain"
+          onError={(e) => {
+            e.currentTarget.style.display = 'none';
+            e.currentTarget.nextElementSibling?.classList.remove('hidden');
+          }}
+        />
+        <Settings className="w-5 h-5 text-muted-foreground hidden" />
+      </div>
+    );
+  }
+  
+  return (
+    <div className={`${className} relative flex items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800 p-1.5 border border-gray-200 dark:border-gray-700`}>
+      <Settings className="w-5 h-5 text-muted-foreground" />
+    </div>
+  );
+};
 
 export function IntegrationsPage() {
   const categories = [
@@ -66,8 +152,28 @@ export function IntegrationsPage() {
       integrations: [
         { name: "Slack", description: "Team collaboration", status: "available" },
         { name: "Microsoft Teams", description: "Collaboration platform", status: "available" },
-        { name: "Discord", description: "Voice and text chat", status: "coming-soon" },
+        { name: "Discord", description: "Voice and text chat", status: "available" },
         { name: "Email", description: "Email notifications", status: "available" }
+      ]
+    },
+    {
+      title: "Databases",
+      description: "Monitor and manage your data layer",
+      integrations: [
+        { name: "PostgreSQL", description: "Open source relational database", status: "available" },
+        { name: "MySQL", description: "Popular SQL database", status: "available" },
+        { name: "MongoDB", description: "NoSQL document database", status: "available" },
+        { name: "Redis", description: "In-memory data store", status: "available" }
+      ]
+    },
+    {
+      title: "Security & Error Tracking",
+      description: "Track errors and maintain security",
+      integrations: [
+        { name: "Sentry", description: "Error tracking and performance", status: "available" },
+        { name: "Rollbar", description: "Real-time error monitoring", status: "available" },
+        { name: "Bugsnag", description: "Error monitoring and stability", status: "available" },
+        { name: "Honeycomb", description: "Observability and performance", status: "available" }
       ]
     }
   ]
@@ -94,7 +200,7 @@ export function IntegrationsPage() {
           <div className="grid gap-8 md:grid-cols-3 mb-16">
             <Card className="text-center">
               <CardContent className="p-6">
-                <div className="text-3xl font-bold text-blue-600 mb-2">50+</div>
+                <div className="text-3xl font-bold text-blue-600 mb-2">54+</div>
                 <div className="text-sm text-muted-foreground">Supported Integrations</div>
               </CardContent>
             </Card>
@@ -126,7 +232,12 @@ export function IntegrationsPage() {
                     <Card key={integration.name} className="card-hover">
                       <CardHeader className="pb-3">
                         <div className="flex items-center justify-between">
-                          <CardTitle className="text-lg">{integration.name}</CardTitle>
+                          <div className="flex items-center space-x-3">
+                            <div className="relative">
+                              <ServiceIcon serviceName={integration.name} className="w-8 h-8" />
+                            </div>
+                            <CardTitle className="text-lg">{integration.name}</CardTitle>
+                          </div>
                           {integration.status === 'available' ? (
                             <Badge variant="success" className="text-xs">
                               <CheckCircle className="mr-1 h-3 w-3" />

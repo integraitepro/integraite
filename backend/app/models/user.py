@@ -54,6 +54,7 @@ class User(Base):
     
     # Relationships
     organization_memberships = relationship("OrganizationMember", back_populates="user", foreign_keys="OrganizationMember.user_id")
+    integrations = relationship("UserIntegration", back_populates="user")
     audit_logs = relationship("AuditLog", back_populates="user")
     
     @property
@@ -96,9 +97,9 @@ class Organization(Base):
     
     # Relationships
     members = relationship("OrganizationMember", back_populates="organization")
+    integrations = relationship("UserIntegration", back_populates="organization")
     agents = relationship("Agent", back_populates="organization")
     incidents = relationship("Incident", back_populates="organization")
-    integrations = relationship("Integration", back_populates="organization")
     automations = relationship("Automation", back_populates="organization")
     subscription = relationship("Subscription", back_populates="organization", uselist=False)
     

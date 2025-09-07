@@ -18,7 +18,7 @@ async def lifespan(app: FastAPI):
     """Application lifespan events"""
     # Startup
     try:
-        # await init_database()
+        await init_database()
         print(f"🚀 Integraite API starting up in {settings.ENVIRONMENT} mode")
     except Exception as e:
         print(f"❌ Database initialization failed: {e}")

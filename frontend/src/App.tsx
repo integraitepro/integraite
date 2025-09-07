@@ -25,7 +25,7 @@ import { AgentsPage } from '@/pages/app/agents'
 import { IncidentsPage } from '@/pages/app/incidents'
 import { IncidentDetailPage } from '@/pages/app/incident-detail'
 import { AutomationsPage } from '@/pages/app/automations'
-import { IntegrationsAppPage } from '@/pages/app/integrations'
+import AppIntegrationsPage from '@/pages/app/integrations'
 import { EvidencePage } from '@/pages/app/evidence'
 import { ApprovalsPage } from '@/pages/app/approvals'
 import { UsersPage } from '@/pages/app/users'
@@ -59,11 +59,11 @@ function App() {
             {/* App routes */}
             <Route path="/app" element={<AuthGuard><DashboardPage /></AuthGuard>} />
             <Route path="/app/onboarding" element={<AuthGuard><OnboardingPage /></AuthGuard>} />
-            <Route path="/app/agents" element={<AuthGuard><AgentsPage /></AuthGuard>} />
-            <Route path="/app/incidents" element={<AuthGuard><IncidentsPage /></AuthGuard>} />
-            <Route path="/app/incidents/:id" element={<AuthGuard><IncidentDetailPage /></AuthGuard>} />
+          <Route path="/app/agents" element={<AuthGuard><AgentsPage /></AuthGuard>} />
+          <Route path="/app/incidents" element={<AuthGuard><IncidentsPage /></AuthGuard>} />
+          <Route path="/app/incidents/:id" element={<AuthGuard><IncidentDetailPage /></AuthGuard>} />
+          <Route path="/app/integrations" element={<AuthGuard><AppIntegrationsPage /></AuthGuard>} />
             <Route path="/app/automations" element={<AuthGuard><AutomationsPage /></AuthGuard>} />
-            <Route path="/app/integrations" element={<AuthGuard><IntegrationsAppPage /></AuthGuard>} />
             <Route path="/app/evidence" element={<AuthGuard><EvidencePage /></AuthGuard>} />
             <Route path="/app/approvals" element={<AuthGuard><ApprovalsPage /></AuthGuard>} />
             <Route path="/app/users" element={<AuthGuard><UsersPage /></AuthGuard>} />
