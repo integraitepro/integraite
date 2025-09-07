@@ -3,7 +3,7 @@ Integraite Backend API
 Main FastAPI application entry point
 """
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from contextlib import asynccontextmanager
@@ -45,7 +45,12 @@ app = FastAPI(
 # Security middleware
 app.add_middleware(
     TrustedHostMiddleware,
-    allowed_hosts=["*"] if settings.DEBUG else ["integraite.com", "*.integraite.com"]
+    allowed_hosts=["*"] if settings.DEBUG else [
+        "api.integraite.pro", 
+        "integraite.pro", 
+        "*.integraite.pro",
+        "localhost"  # Allow Nginx proxy
+    ]
 )
 
 # CORS middleware
@@ -56,6 +61,21 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Add this middleware after CORS middleware
+@app.middleware("http")
+async def handle_reverse_proxy(request: Request, call_next):
+    """Handle reverse proxy headers from Nginx"""
+    # Trust Nginx forwarded headers
+    if "x-forwarded-proto" in request.headers:
+        request.scope["scheme"] = request.headers["x-forwarded-proto"]
+    if "x-forwarded-for" in request.headers:
+        # Get the original client IP
+        client_ip = request.headers["x-forwarded-for"].split(",")[0].strip()
+        request.scope["client"] = (client_ip, 0)
+    
+    response = await call_next(request)
+    return response
 
 # Include API routes
 app.include_router(api_router, prefix="/api/v1")
