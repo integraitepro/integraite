@@ -2,7 +2,36 @@
  * API client configuration and utilities
  */
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1'
+// Determine API URL based on environment
+const getApiBaseUrl = () => {
+  // 1. Use explicit environment variable if set
+  // if (import.meta.env.VITE_API_URL) {
+  //   return import.meta.env.VITE_API_URL
+  // }
+  
+  // // 2. Auto-detect based on mode
+  // if (import.meta.env.DEV) {
+  //   // Development mode - use localhost
+  //   return 'https://api.integraite.com/api/v1'
+  // } else {
+  //   // Production mode - use live API
+  //   return 'https://api.integraite.com/api/v1'
+  // }
+    return 'https://api.integraite.com/api/v1'
+}
+
+const API_BASE_URL = getApiBaseUrl()
+
+// Debug logging (only in development)
+if (import.meta.env.DEV) {
+  console.log('🔗 API Configuration:', {
+    mode: import.meta.env.MODE,
+    isDev: import.meta.env.DEV,
+    isProd: import.meta.env.PROD,
+    explicitApiUrl: import.meta.env.VITE_API_URL,
+    finalApiUrl: API_BASE_URL
+  })
+}
 
 export class ApiError extends Error {
   constructor(public status: number, message: string, public data?: any) {

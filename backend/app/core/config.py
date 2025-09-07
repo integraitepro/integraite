@@ -26,12 +26,12 @@ class Settings(BaseSettings):
     DATABASE_URL: str = Field(default="sqlite:///./integraite.db")
     
     # Security
-    SECRET_KEY: str = Field(default="dev-secret-key-change-in-production")
+    SECRET_KEY: str = Field(default="thiswillbechangedinproduction")
     ALGORITHM: str = Field(default="HS256")
     ACCESS_TOKEN_EXPIRE_MINUTES: int = Field(default=30)
     
     # CORS
-    CORS_ORIGINS: List[str] = Field(default=["http://localhost:3000", "http://localhost:5173"])
+    CORS_ORIGINS: List[str] = Field(default=["http://localhost:3000", "http://localhost:5173", "https://api.integraite.com", "https://integraite.com", "https://www.integraite.com"])
     
     # External APIs
     STRIPE_SECRET_KEY: Optional[str] = Field(default=None)

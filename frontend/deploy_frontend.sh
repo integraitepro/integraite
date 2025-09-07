@@ -17,8 +17,14 @@ if ! command -v aws &> /dev/null; then
     exit 1
 fi
 
-# Build the application
-echo "🔨 Building React application..."
+# Create production environment file if it doesn't exist
+if [ ! -f ".env.production" ]; then
+    echo "📝 Creating production environment file..."
+    cp env.production .env.production
+fi
+
+# Build the application for production
+echo "🔨 Building React application for production..."
 npm run build
 
 # Check if build was successful

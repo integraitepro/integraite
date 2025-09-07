@@ -7,7 +7,7 @@ set -e  # Exit on any error
 
 # Configuration
 REPO_URL="https://github.com/integraitepro/integraite.git"  # Update with your actual repo URL
-PROJECT_DIR="/root/integraite"
+PROJECT_DIR="/opt/integraite"
 BACKEND_DIR="$PROJECT_DIR/backend"
 PYTHON_VERSION="3.11"
 
@@ -124,7 +124,7 @@ DEBUG=false
 SECRET_KEY=$(openssl rand -hex 32)
 JWT_SECRET_KEY=$(openssl rand -hex 32)
 DATABASE_URL=sqlite+aiosqlite:///./data/integraite.db
-CORS_ORIGINS=["https://integraite.pro", "https://api.integraite.pro"]
+CORS_ORIGINS=["https://integraite.com", "https://api.integraite.com", "https://www.integraite.com"]
 EOL
     fi
     echo "⚠️  Please review and update .env file with your configuration"

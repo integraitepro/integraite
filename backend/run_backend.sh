@@ -6,7 +6,7 @@
 set -e  # Exit on any error
 
 # Configuration
-BACKEND_DIR="/root/integraite/backend"
+BACKEND_DIR="/opt/integraite/backend"
 PID_FILE="/var/run/integraite-backend.pid"
 LOG_FILE="/var/log/integraite-backend.log"
 HOST="0.0.0.0"
