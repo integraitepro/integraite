@@ -124,7 +124,7 @@ DEBUG=false
 SECRET_KEY=$(openssl rand -hex 32)
 JWT_SECRET_KEY=$(openssl rand -hex 32)
 DATABASE_URL=sqlite+aiosqlite:///./data/integraite.db
-CORS_ORIGINS=["https://integraite.com", "https://api.integraite.com", "https://www.integraite.com"]
+CORS_ORIGINS=["https://integraite.pro", "https://api.integraite.pro", "https://www.integraite.pro"]
 EOL
     fi
     echo "⚠️  Please review and update .env file with your configuration"

@@ -720,7 +720,7 @@ async def seed_integration_providers(db: AsyncSession):
                 "icon_url": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/amazonaws.svg",
                 "brand_color": "#FF9900",
                 "documentation_url": "https://docs.aws.amazon.com/",
-                "setup_guide_url": "https://docs.integraite.com/integrations/aws",
+                "setup_guide_url": "https://docs.integraite.pro/integrations/aws",
                 "tags": ["cloud", "infrastructure", "monitoring", "compute", "storage"],
                 "supported_features": ["resource_monitoring", "cost_tracking", "alerts", "automation"],
                 "is_featured": True
@@ -776,7 +776,7 @@ async def seed_integration_providers(db: AsyncSession):
                 "icon_url": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/microsoftazure.svg",
                 "brand_color": "#0078D4",
                 "documentation_url": "https://docs.microsoft.com/azure/",
-                "setup_guide_url": "https://docs.integraite.com/integrations/azure",
+                "setup_guide_url": "https://docs.integraite.pro/integrations/azure",
                 "tags": ["cloud", "infrastructure", "monitoring", "microsoft"],
                 "supported_features": ["resource_monitoring", "cost_tracking", "alerts", "automation"],
                 "is_featured": True
@@ -824,7 +824,7 @@ async def seed_integration_providers(db: AsyncSession):
                 "icon_url": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/servicenow.svg",
                 "brand_color": "#62D84E",
                 "documentation_url": "https://docs.servicenow.com/",
-                "setup_guide_url": "https://docs.integraite.com/integrations/servicenow",
+                "setup_guide_url": "https://docs.integraite.pro/integrations/servicenow",
                 "tags": ["itsm", "incident", "change", "workflow"],
                 "supported_features": ["incident_sync", "change_management", "alerts", "workflows"],
                 "is_featured": True
@@ -871,7 +871,7 @@ async def seed_integration_providers(db: AsyncSession):
                 "icon_url": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/slack.svg",
                 "brand_color": "#4A154B",
                 "documentation_url": "https://api.slack.com/",
-                "setup_guide_url": "https://docs.integraite.com/integrations/slack",
+                "setup_guide_url": "https://docs.integraite.pro/integrations/slack",
                 "tags": ["communication", "notifications", "collaboration"],
                 "supported_features": ["notifications", "interactive_messages", "workflows"],
                 "is_featured": True
@@ -901,7 +901,7 @@ async def seed_integration_providers(db: AsyncSession):
                 "icon_url": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/googlecloud.svg",
                 "brand_color": "#4285F4",
                 "documentation_url": "https://cloud.google.com/docs/",
-                "setup_guide_url": "https://docs.integraite.com/integrations/gcp",
+                "setup_guide_url": "https://docs.integraite.pro/integrations/gcp",
                 "tags": ["cloud", "infrastructure", "monitoring", "google"],
                 "supported_features": ["resource_monitoring", "cost_tracking", "alerts", "automation"],
                 "is_featured": True
@@ -941,7 +941,7 @@ async def seed_integration_providers(db: AsyncSession):
                 "icon_url": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/datadog.svg",
                 "brand_color": "#632CA6",
                 "documentation_url": "https://docs.datadoghq.com/",
-                "setup_guide_url": "https://docs.integraite.com/integrations/datadog",
+                "setup_guide_url": "https://docs.integraite.pro/integrations/datadog",
                 "tags": ["monitoring", "metrics", "logs", "apm"],
                 "supported_features": ["metrics_collection", "log_aggregation", "alerts", "dashboards"],
                 "is_featured": True
@@ -980,7 +980,7 @@ async def seed_integration_providers(db: AsyncSession):
                 "icon_url": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/newrelic.svg",
                 "brand_color": "#008C99",
                 "documentation_url": "https://docs.newrelic.com/",
-                "setup_guide_url": "https://docs.integraite.com/integrations/newrelic",
+                "setup_guide_url": "https://docs.integraite.pro/integrations/newrelic",
                 "tags": ["monitoring", "apm", "performance", "alerts"],
                 "supported_features": ["apm", "infrastructure_monitoring", "alerts", "dashboards"],
                 "is_featured": False
@@ -1018,7 +1018,7 @@ async def seed_integration_providers(db: AsyncSession):
                 "icon_url": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/grafana.svg",
                 "brand_color": "#F46800",
                 "documentation_url": "https://grafana.com/docs/",
-                "setup_guide_url": "https://docs.integraite.com/integrations/grafana",
+                "setup_guide_url": "https://docs.integraite.pro/integrations/grafana",
                 "tags": ["visualization", "monitoring", "dashboards", "metrics"],
                 "supported_features": ["dashboard_sync", "alerts", "metrics_collection"],
                 "is_featured": False
@@ -1057,7 +1057,7 @@ async def seed_integration_providers(db: AsyncSession):
                 "icon_url": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/prometheus.svg",
                 "brand_color": "#E6522C",
                 "documentation_url": "https://prometheus.io/docs/",
-                "setup_guide_url": "https://docs.integraite.com/integrations/prometheus",
+                "setup_guide_url": "https://docs.integraite.pro/integrations/prometheus",
                 "tags": ["metrics", "monitoring", "time-series", "alerts"],
                 "supported_features": ["metrics_collection", "alerts", "time_series"],
                 "is_featured": False
@@ -1095,7 +1095,7 @@ async def seed_integration_providers(db: AsyncSession):
                 "icon_url": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/github.svg",
                 "brand_color": "#181717",
                 "documentation_url": "https://docs.github.com/",
-                "setup_guide_url": "https://docs.integraite.com/integrations/github",
+                "setup_guide_url": "https://docs.integraite.pro/integrations/github",
                 "tags": ["git", "repository", "ci/cd", "workflows"],
                 "supported_features": ["repository_monitoring", "workflow_tracking", "issue_sync"],
                 "is_featured": True
@@ -1134,7 +1134,7 @@ async def seed_integration_providers(db: AsyncSession):
                 "icon_url": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/gitlab.svg",
                 "brand_color": "#FC6D26",
                 "documentation_url": "https://docs.gitlab.com/",
-                "setup_guide_url": "https://docs.integraite.com/integrations/gitlab",
+                "setup_guide_url": "https://docs.integraite.pro/integrations/gitlab",
                 "tags": ["git", "repository", "ci/cd", "pipelines"],
                 "supported_features": ["repository_monitoring", "pipeline_tracking", "issue_sync"],
                 "is_featured": False
@@ -1173,7 +1173,7 @@ async def seed_integration_providers(db: AsyncSession):
                 "icon_url": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/jenkins.svg",
                 "brand_color": "#D33833",
                 "documentation_url": "https://www.jenkins.io/doc/",
-                "setup_guide_url": "https://docs.integraite.com/integrations/jenkins",
+                "setup_guide_url": "https://docs.integraite.pro/integrations/jenkins",
                 "tags": ["ci/cd", "automation", "builds", "pipelines"],
                 "supported_features": ["build_monitoring", "pipeline_tracking", "job_alerts"],
                 "is_featured": False
@@ -1221,7 +1221,7 @@ async def seed_integration_providers(db: AsyncSession):
                 "icon_url": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/docker.svg",
                 "brand_color": "#2496ED",
                 "documentation_url": "https://docs.docker.com/",
-                "setup_guide_url": "https://docs.integraite.com/integrations/docker",
+                "setup_guide_url": "https://docs.integraite.pro/integrations/docker",
                 "tags": ["containers", "registry", "docker", "images"],
                 "supported_features": ["image_monitoring", "vulnerability_scanning", "webhooks"],
                 "is_featured": False
@@ -1259,7 +1259,7 @@ async def seed_integration_providers(db: AsyncSession):
                 "icon_url": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/kubernetes.svg",
                 "brand_color": "#326CE5",
                 "documentation_url": "https://kubernetes.io/docs/",
-                "setup_guide_url": "https://docs.integraite.com/integrations/kubernetes",
+                "setup_guide_url": "https://docs.integraite.pro/integrations/kubernetes",
                 "tags": ["orchestration", "containers", "cluster", "monitoring"],
                 "supported_features": ["cluster_monitoring", "pod_management", "resource_tracking"],
                 "is_featured": True
@@ -1298,7 +1298,7 @@ async def seed_integration_providers(db: AsyncSession):
                 "icon_url": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/terraform.svg",
                 "brand_color": "#7B42BC",
                 "documentation_url": "https://www.terraform.io/docs/",
-                "setup_guide_url": "https://docs.integraite.com/integrations/terraform",
+                "setup_guide_url": "https://docs.integraite.pro/integrations/terraform",
                 "tags": ["iac", "infrastructure", "automation", "provisioning"],
                 "supported_features": ["plan_monitoring", "state_tracking", "run_alerts"],
                 "is_featured": False
@@ -1336,7 +1336,7 @@ async def seed_integration_providers(db: AsyncSession):
                 "icon_url": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/jira.svg",
                 "brand_color": "#0052CC",
                 "documentation_url": "https://support.atlassian.com/jira/",
-                "setup_guide_url": "https://docs.integraite.com/integrations/jira",
+                "setup_guide_url": "https://docs.integraite.pro/integrations/jira",
                 "tags": ["issue tracking", "project management", "agile", "tickets"],
                 "supported_features": ["issue_sync", "project_tracking", "workflow_automation"],
                 "is_featured": True
@@ -1384,7 +1384,7 @@ async def seed_integration_providers(db: AsyncSession):
                 "icon_url": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/confluence.svg",
                 "brand_color": "#172B4D",
                 "documentation_url": "https://support.atlassian.com/confluence/",
-                "setup_guide_url": "https://docs.integraite.com/integrations/confluence",
+                "setup_guide_url": "https://docs.integraite.pro/integrations/confluence",
                 "tags": ["documentation", "knowledge base", "collaboration", "wiki"],
                 "supported_features": ["content_sync", "search", "page_monitoring"],
                 "is_featured": False
@@ -1423,7 +1423,7 @@ async def seed_integration_providers(db: AsyncSession):
                 "icon_url": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/microsoftteams.svg",
                 "brand_color": "#6264A7",
                 "documentation_url": "https://docs.microsoft.com/en-us/microsoftteams/",
-                "setup_guide_url": "https://docs.integraite.com/integrations/teams",
+                "setup_guide_url": "https://docs.integraite.pro/integrations/teams",
                 "tags": ["communication", "notifications", "collaboration", "chat"],
                 "supported_features": ["notifications", "interactive_messages", "bot_integration"],
                 "is_featured": True
@@ -1453,7 +1453,7 @@ async def seed_integration_providers(db: AsyncSession):
                 "icon_url": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/discord.svg",
                 "brand_color": "#5865F2",
                 "documentation_url": "https://discord.com/developers/docs",
-                "setup_guide_url": "https://docs.integraite.com/integrations/discord",
+                "setup_guide_url": "https://docs.integraite.pro/integrations/discord",
                 "tags": ["communication", "notifications", "chat", "gaming"],
                 "supported_features": ["notifications", "bot_commands", "webhooks"],
                 "is_featured": False
@@ -1483,7 +1483,7 @@ async def seed_integration_providers(db: AsyncSession):
                 "icon_url": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/pagerduty.svg",
                 "brand_color": "#06AC38",
                 "documentation_url": "https://developer.pagerduty.com/",
-                "setup_guide_url": "https://docs.integraite.com/integrations/pagerduty",
+                "setup_guide_url": "https://docs.integraite.pro/integrations/pagerduty",
                 "tags": ["incident management", "alerting", "on-call", "escalation"],
                 "supported_features": ["incident_sync", "alert_routing", "escalation_policies"],
                 "is_featured": True
@@ -1522,7 +1522,7 @@ async def seed_integration_providers(db: AsyncSession):
                 "icon_url": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/opsgenie.svg",
                 "brand_color": "#172B4D",
                 "documentation_url": "https://docs.opsgenie.com/",
-                "setup_guide_url": "https://docs.integraite.com/integrations/opsgenie",
+                "setup_guide_url": "https://docs.integraite.pro/integrations/opsgenie",
                 "tags": ["incident management", "alerting", "on-call", "atlassian"],
                 "supported_features": ["alert_management", "incident_tracking", "escalation"],
                 "is_featured": False
@@ -1561,7 +1561,7 @@ async def seed_integration_providers(db: AsyncSession):
                 "icon_url": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/splunk.svg",
                 "brand_color": "#000000",
                 "documentation_url": "https://docs.splunk.com/",
-                "setup_guide_url": "https://docs.integraite.com/integrations/splunk",
+                "setup_guide_url": "https://docs.integraite.pro/integrations/splunk",
                 "tags": ["logging", "security", "analysis", "siem"],
                 "supported_features": ["log_analysis", "search", "alerts", "dashboards"],
                 "is_featured": False
@@ -1619,7 +1619,7 @@ async def seed_integration_providers(db: AsyncSession):
                 "icon_url": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/elasticsearch.svg",
                 "brand_color": "#005571",
                 "documentation_url": "https://www.elastic.co/guide/",
-                "setup_guide_url": "https://docs.integraite.com/integrations/elasticsearch",
+                "setup_guide_url": "https://docs.integraite.pro/integrations/elasticsearch",
                 "tags": ["search", "logging", "analytics", "elk"],
                 "supported_features": ["log_search", "analytics", "monitoring"],
                 "is_featured": False
@@ -1667,7 +1667,7 @@ async def seed_integration_providers(db: AsyncSession):
                 "icon_url": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/postgresql.svg",
                 "brand_color": "#336791",
                 "documentation_url": "https://www.postgresql.org/docs/",
-                "setup_guide_url": "https://docs.integraite.com/integrations/postgresql",
+                "setup_guide_url": "https://docs.integraite.pro/integrations/postgresql",
                 "tags": ["database", "sql", "relational", "postgres"],
                 "supported_features": ["performance_monitoring", "query_analysis", "health_checks"],
                 "is_featured": True
@@ -1734,7 +1734,7 @@ async def seed_integration_providers(db: AsyncSession):
                 "icon_url": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/mysql.svg",
                 "brand_color": "#4479A1",
                 "documentation_url": "https://dev.mysql.com/doc/",
-                "setup_guide_url": "https://docs.integraite.com/integrations/mysql",
+                "setup_guide_url": "https://docs.integraite.pro/integrations/mysql",
                 "tags": ["database", "sql", "relational", "mysql"],
                 "supported_features": ["performance_monitoring", "query_analysis", "replication_monitoring"],
                 "is_featured": True
@@ -1801,7 +1801,7 @@ async def seed_integration_providers(db: AsyncSession):
                 "icon_url": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/mongodb.svg",
                 "brand_color": "#47A248",
                 "documentation_url": "https://docs.mongodb.com/",
-                "setup_guide_url": "https://docs.integraite.com/integrations/mongodb",
+                "setup_guide_url": "https://docs.integraite.pro/integrations/mongodb",
                 "tags": ["database", "nosql", "document", "mongodb"],
                 "supported_features": ["performance_monitoring", "replica_set_monitoring", "sharding_analytics"],
                 "is_featured": False
@@ -1839,7 +1839,7 @@ async def seed_integration_providers(db: AsyncSession):
                 "icon_url": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/redis.svg",
                 "brand_color": "#DC382D",
                 "documentation_url": "https://redis.io/documentation",
-                "setup_guide_url": "https://docs.integraite.com/integrations/redis",
+                "setup_guide_url": "https://docs.integraite.pro/integrations/redis",
                 "tags": ["cache", "in-memory", "key-value", "redis"],
                 "supported_features": ["performance_monitoring", "memory_analysis", "slowlog_tracking"],
                 "is_featured": False
@@ -1888,7 +1888,7 @@ async def seed_integration_providers(db: AsyncSession):
                 "icon_url": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/nginx.svg",
                 "brand_color": "#009639",
                 "documentation_url": "https://nginx.org/en/docs/",
-                "setup_guide_url": "https://docs.integraite.com/integrations/nginx",
+                "setup_guide_url": "https://docs.integraite.pro/integrations/nginx",
                 "tags": ["web server", "proxy", "load balancer", "http"],
                 "supported_features": ["request_monitoring", "performance_tracking", "error_analysis"],
                 "is_featured": False
@@ -1927,7 +1927,7 @@ async def seed_integration_providers(db: AsyncSession):
                 "icon_url": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/apache.svg",
                 "brand_color": "#D22128",
                 "documentation_url": "https://httpd.apache.org/docs/",
-                "setup_guide_url": "https://docs.integraite.com/integrations/apache",
+                "setup_guide_url": "https://docs.integraite.pro/integrations/apache",
                 "tags": ["web server", "http", "apache", "monitoring"],
                 "supported_features": ["request_monitoring", "performance_tracking", "module_monitoring"],
                 "is_featured": False
@@ -1966,7 +1966,7 @@ async def seed_integration_providers(db: AsyncSession):
                 "icon_url": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/sentry.svg",
                 "brand_color": "#362D59",
                 "documentation_url": "https://docs.sentry.io/",
-                "setup_guide_url": "https://docs.integraite.com/integrations/sentry",
+                "setup_guide_url": "https://docs.integraite.pro/integrations/sentry",
                 "tags": ["error tracking", "performance", "monitoring", "debugging"],
                 "supported_features": ["error_tracking", "performance_monitoring", "release_tracking"],
                 "is_featured": True
@@ -2013,7 +2013,7 @@ async def seed_integration_providers(db: AsyncSession):
                 "icon_url": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/rollbar.svg",
                 "brand_color": "#F25A3F",
                 "documentation_url": "https://docs.rollbar.com/",
-                "setup_guide_url": "https://docs.integraite.com/integrations/rollbar",
+                "setup_guide_url": "https://docs.integraite.pro/integrations/rollbar",
                 "tags": ["error tracking", "monitoring", "debugging", "logging"],
                 "supported_features": ["error_tracking", "deploy_tracking", "real_time_alerts"],
                 "is_featured": False
@@ -2042,7 +2042,7 @@ async def seed_integration_providers(db: AsyncSession):
                 "icon_url": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/bugsnag.svg",
                 "brand_color": "#4949E7",
                 "documentation_url": "https://docs.bugsnag.com/",
-                "setup_guide_url": "https://docs.integraite.com/integrations/bugsnag",
+                "setup_guide_url": "https://docs.integraite.pro/integrations/bugsnag",
                 "tags": ["error tracking", "stability", "monitoring", "crashes"],
                 "supported_features": ["error_tracking", "release_tracking", "user_tracking"],
                 "is_featured": False
@@ -2080,7 +2080,7 @@ async def seed_integration_providers(db: AsyncSession):
                 "icon_url": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/honeycomb.svg",
                 "brand_color": "#F2B632",
                 "documentation_url": "https://docs.honeycomb.io/",
-                "setup_guide_url": "https://docs.integraite.com/integrations/honeycomb",
+                "setup_guide_url": "https://docs.integraite.pro/integrations/honeycomb",
                 "tags": ["observability", "tracing", "performance", "distributed systems"],
                 "supported_features": ["distributed_tracing", "custom_metrics", "query_analysis"],
                 "is_featured": False
@@ -2118,7 +2118,7 @@ async def seed_integration_providers(db: AsyncSession):
                 "icon_url": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/jaeger.svg",
                 "brand_color": "#60D0E4",
                 "documentation_url": "https://www.jaegertracing.io/docs/",
-                "setup_guide_url": "https://docs.integraite.com/integrations/jaeger",
+                "setup_guide_url": "https://docs.integraite.pro/integrations/jaeger",
                 "tags": ["tracing", "distributed systems", "microservices", "observability"],
                 "supported_features": ["distributed_tracing", "service_map", "performance_analysis"],
                 "is_featured": False
@@ -2156,7 +2156,7 @@ async def seed_integration_providers(db: AsyncSession):
                 "icon_url": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/zipkin.svg",
                 "brand_color": "#FF6B35",
                 "documentation_url": "https://zipkin.io/pages/documentation_v1.html",
-                "setup_guide_url": "https://docs.integraite.com/integrations/zipkin",
+                "setup_guide_url": "https://docs.integraite.pro/integrations/zipkin",
                 "tags": ["tracing", "distributed systems", "latency", "debugging"],
                 "supported_features": ["distributed_tracing", "latency_analysis", "dependency_tracking"],
                 "is_featured": False
@@ -2185,7 +2185,7 @@ async def seed_integration_providers(db: AsyncSession):
                 "icon_url": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/circleci.svg",
                 "brand_color": "#343434",
                 "documentation_url": "https://circleci.com/docs/",
-                "setup_guide_url": "https://docs.integraite.com/integrations/circleci",
+                "setup_guide_url": "https://docs.integraite.pro/integrations/circleci",
                 "tags": ["ci/cd", "automation", "builds", "testing"],
                 "supported_features": ["build_monitoring", "workflow_tracking", "test_results"],
                 "is_featured": False
@@ -2223,7 +2223,7 @@ async def seed_integration_providers(db: AsyncSession):
                 "icon_url": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/travisci.svg",
                 "brand_color": "#3EAAAF",
                 "documentation_url": "https://docs.travis-ci.com/",
-                "setup_guide_url": "https://docs.integraite.com/integrations/travisci",
+                "setup_guide_url": "https://docs.integraite.pro/integrations/travisci",
                 "tags": ["ci/cd", "automation", "builds", "github"],
                 "supported_features": ["build_monitoring", "repository_tracking", "build_alerts"],
                 "is_featured": False
@@ -2261,7 +2261,7 @@ async def seed_integration_providers(db: AsyncSession):
                 "icon_url": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/githubactions.svg",
                 "brand_color": "#2088FF",
                 "documentation_url": "https://docs.github.com/en/actions",
-                "setup_guide_url": "https://docs.integraite.com/integrations/github-actions",
+                "setup_guide_url": "https://docs.integraite.pro/integrations/github-actions",
                 "tags": ["ci/cd", "automation", "workflows", "github"],
                 "supported_features": ["workflow_monitoring", "job_tracking", "artifact_management"],
                 "is_featured": True
@@ -2301,7 +2301,7 @@ async def seed_integration_providers(db: AsyncSession):
                 "icon_url": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/azuredevops.svg",
                 "brand_color": "#0078D7",
                 "documentation_url": "https://docs.microsoft.com/en-us/azure/devops/",
-                "setup_guide_url": "https://docs.integraite.com/integrations/azure-devops",
+                "setup_guide_url": "https://docs.integraite.pro/integrations/azure-devops",
                 "tags": ["ci/cd", "project management", "microsoft", "pipelines"],
                 "supported_features": ["pipeline_monitoring", "work_item_tracking", "repository_monitoring"],
                 "is_featured": False
@@ -2349,7 +2349,7 @@ async def seed_integration_providers(db: AsyncSession):
                 "icon_url": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/sonarqube.svg",
                 "brand_color": "#4E9BCD",
                 "documentation_url": "https://docs.sonarqube.org/",
-                "setup_guide_url": "https://docs.integraite.com/integrations/sonarqube",
+                "setup_guide_url": "https://docs.integraite.pro/integrations/sonarqube",
                 "tags": ["code quality", "security", "static analysis", "technical debt"],
                 "supported_features": ["quality_gates", "security_hotspots", "technical_debt_tracking"],
                 "is_featured": False
@@ -2397,7 +2397,7 @@ async def seed_integration_providers(db: AsyncSession):
                 "icon_url": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/stripe.svg",
                 "brand_color": "#635BFF",
                 "documentation_url": "https://stripe.com/docs",
-                "setup_guide_url": "https://docs.integraite.com/integrations/stripe",
+                "setup_guide_url": "https://docs.integraite.pro/integrations/stripe",
                 "tags": ["payments", "billing", "subscriptions", "fintech"],
                 "supported_features": ["transaction_monitoring", "subscription_tracking", "webhook_processing"],
                 "is_featured": True
@@ -2438,7 +2438,7 @@ async def seed_integration_providers(db: AsyncSession):
                 "icon_url": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/twilio.svg",
                 "brand_color": "#F22F46",
                 "documentation_url": "https://www.twilio.com/docs",
-                "setup_guide_url": "https://docs.integraite.com/integrations/twilio",
+                "setup_guide_url": "https://docs.integraite.pro/integrations/twilio",
                 "tags": ["sms", "voice", "communication", "messaging"],
                 "supported_features": ["message_tracking", "call_monitoring", "webhook_processing"],
                 "is_featured": False
@@ -2477,7 +2477,7 @@ async def seed_integration_providers(db: AsyncSession):
                 "icon_url": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/sendgrid.svg",
                 "brand_color": "#1A82E2",
                 "documentation_url": "https://docs.sendgrid.com/",
-                "setup_guide_url": "https://docs.integraite.com/integrations/sendgrid",
+                "setup_guide_url": "https://docs.integraite.pro/integrations/sendgrid",
                 "tags": ["email", "delivery", "marketing", "transactional"],
                 "supported_features": ["delivery_tracking", "bounce_monitoring", "engagement_analytics"],
                 "is_featured": False
@@ -2507,7 +2507,7 @@ async def seed_integration_providers(db: AsyncSession):
                 "icon_url": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/mailgun.svg",
                 "brand_color": "#F56500",
                 "documentation_url": "https://documentation.mailgun.com/",
-                "setup_guide_url": "https://docs.integraite.com/integrations/mailgun",
+                "setup_guide_url": "https://docs.integraite.pro/integrations/mailgun",
                 "tags": ["email", "delivery", "api", "messaging"],
                 "supported_features": ["delivery_tracking", "bounce_handling", "analytics"],
                 "is_featured": False
@@ -2546,7 +2546,7 @@ async def seed_integration_providers(db: AsyncSession):
                 "icon_url": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/segment.svg",
                 "brand_color": "#52BD95",
                 "documentation_url": "https://segment.com/docs/",
-                "setup_guide_url": "https://docs.integraite.com/integrations/segment",
+                "setup_guide_url": "https://docs.integraite.pro/integrations/segment",
                 "tags": ["analytics", "customer data", "tracking", "cdp"],
                 "supported_features": ["event_tracking", "user_analytics", "destination_monitoring"],
                 "is_featured": False
@@ -2584,7 +2584,7 @@ async def seed_integration_providers(db: AsyncSession):
                 "icon_url": "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/amplitude.svg",
                 "brand_color": "#2E5BFF",
                 "documentation_url": "https://developers.amplitude.com/",
-                "setup_guide_url": "https://docs.integraite.com/integrations/amplitude",
+                "setup_guide_url": "https://docs.integraite.pro/integrations/amplitude",
                 "tags": ["analytics", "product", "user behavior", "events"],
                 "supported_features": ["event_analytics", "user_segmentation", "funnel_analysis"],
                 "is_featured": False

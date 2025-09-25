@@ -110,8 +110,8 @@ class Agent(Base):
 
 
 class AgentExecution(Base):
-    """Agent execution/action history"""
-    __tablename__ = "agent_executions"
+    """Agent execution/action history (Legacy)"""
+    __tablename__ = "legacy_agent_executions"
     
     id = Column(Integer, primary_key=True, index=True)
     agent_id = Column(Integer, ForeignKey("agents.id"), nullable=True)  # Can be null for incident-specific agents
@@ -154,7 +154,7 @@ class AgentExecution(Base):
     
     # Relationships
     agent = relationship("Agent", back_populates="executions")
-    incident = relationship("Incident", back_populates="agent_executions")
+    incident = relationship("Incident")
     
     @property
     def is_completed(self) -> bool:

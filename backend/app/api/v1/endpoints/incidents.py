@@ -80,7 +80,7 @@ async def seed_demo_data(org_id: int, db: AsyncSession):
         },
         {
             "title": "SSL Certificate Expiring Soon",
-            "description": "SSL certificate for api.integraite.com expires in 7 days",
+            "description": "SSL certificate for api.integraite.pro expires in 7 days",
             "severity": "medium",
             "status": "resolved",
             "category": "Security",

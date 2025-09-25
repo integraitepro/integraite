@@ -31,7 +31,7 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = Field(default=30)
     
     # CORS
-    CORS_ORIGINS: List[str] = Field(default=["http://localhost:3000", "http://localhost:5173", "https://api.integraite.com", "https://integraite.com", "https://www.integraite.com"])
+    CORS_ORIGINS: List[str] = Field(default=["http://localhost:3000", "http://localhost:5173", "https://api.integraite.pro", "https://integraite.pro", "https://www.integraite.pro"])
     
     # External APIs
     STRIPE_SECRET_KEY: Optional[str] = Field(default=None)
