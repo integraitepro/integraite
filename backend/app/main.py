@@ -11,6 +11,7 @@ from contextlib import asynccontextmanager
 from app.core.config import settings
 from app.core.init_db import init_database
 from app.api.v1.router import api_router
+from app.api.v1.endpoints.incidents import router as incidents_router
 
 
 @asynccontextmanager
@@ -79,7 +80,7 @@ async def handle_reverse_proxy(request: Request, call_next):
 
 # Include API routes
 app.include_router(api_router, prefix="/api/v1")
-
+app.include_router(incidents_router, prefix="")
 
 @app.get("/")
 async def root():

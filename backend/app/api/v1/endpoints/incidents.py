@@ -1,31 +1,111 @@
 """
 Incident management API endpoints
 """
-
 from typing import List, Dict, Any, Optional
-from fastapi import APIRouter, Depends, HTTPException, status, Query
+import json
+import random
+from datetime import datetime
+
+from fastapi import APIRouter, Request, Depends, HTTPException, Query, status
+from fastapi.responses import JSONResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func, and_, or_, case
 from sqlalchemy.orm import selectinload
-from datetime import datetime
-import random
 
+from app.core.database import get_db
 from app.api.v1.endpoints.auth import get_current_active_user
 from app.models.user import User, OrganizationMember
-from app.models.incident import Incident, IncidentTimeline, IncidentHypothesis, IncidentSeverity, IncidentStatus
+from app.models.incident import (
+    Incident, IncidentTimeline, IncidentHypothesis, IncidentSeverity, IncidentStatus
+)
 from app.models.agent import AgentExecution
 from app.models.incident_extended import (
-    InfrastructureComponent, VerificationGate, 
-    IncidentExecution, PreExecutionCheck
+    InfrastructureComponent, VerificationGate, IncidentExecution, PreExecutionCheck
 )
 from app.schemas.incident import (
     IncidentCreate, IncidentUpdate, IncidentDetailResponse, IncidentListResponse,
     IncidentStatsResponse, IncidentListQuery, TimelineEntry, AgentExecutionResponse,
     InfrastructureComponentResponse, VerificationGateResponse, IncidentExecutionResponse
 )
-from app.core.database import get_db
-
+# servicenow webhook
 router = APIRouter()
+# In-memory store for the latest webhook payload
+latest_payload = None
+
+@router.post("/webhook/servicenow")
+async def service_now_webhook(request: Request, db: AsyncSession = Depends(get_db)):
+    """
+    Webhook to receive incidents from ServiceNow.
+    ServiceNow will POST JSON payload to this endpoint.
+    """
+    global latest_payload  
+    try:
+        payload = await request.json()  # Get JSON payload from ServiceNow
+    except json.JSONDecodeError:
+        return JSONResponse(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            content={"detail": "Invalid JSON payload"}
+        )
+    
+
+    # Optional: extract specific fields or enrich data
+    incident_number = payload.get("number") or payload.get("incident_number")
+    payload["received_at"] = datetime.now().isoformat()
+    
+    # Store in memory
+    latest_payload = payload
+
+    # Example: extract common ServiceNow fields
+    incident_number = payload.get("number") or payload.get("incident_number")
+    short_description = payload.get("short_description")
+    description = payload.get("description")
+    severity = payload.get("severity")
+    state = payload.get("state")  # ServiceNow state like 'New', 'In Progress', 'Resolved'
+    opened_at = payload.get("opened_at")
+    updated_at = payload.get("sys_updated_on")
+    
+    # Log payload (for debugging)
+    print(f"[{datetime.now()}] Received ServiceNow webhook: {payload}")
+
+    # TODO: Here you can save/update the incident in your DB
+    # Example (pseudo-code):
+    # incident = Incident(
+    #     incident_id=incident_number,
+    #     title=short_description,
+    #     description=description,
+    #     severity=severity,
+    #     status=map_servicenow_state_to_status(state),
+    #     detection_time=opened_at or datetime.now(),
+    # )
+    # db.add(incident)
+    # await db.commit()
+
+    return JSONResponse(
+        status_code=status.HTTP_200_OK,
+        content={"detail": "Webhook received successfully"}
+    )
+
+    # Add a GET endpoint to fetch the latest payload
+@router.get("/webhook/servicenow/latest")
+async def get_latest_payload():
+    print("latest_payload variable has :",latest_payload)
+    if latest_payload:
+        return latest_payload
+    return JSONResponse({"detail": "No data yet"}, status_code=404)
+
+
+# Optional helper function
+def map_servicenow_state_to_status(state: str) -> str:
+    """Map ServiceNow states to your system's status"""
+    mapping = {
+        "New": "investigating",
+        "In Progress": "remediating",
+        "Resolved": "resolved",
+        "Closed": "closed"
+    }
+    return mapping.get(state, "investigating")
+
+# router = APIRouter()
 
 # In-memory storage for demo incidents (will be replaced with real data)
 demo_incidents = {}
