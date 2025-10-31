@@ -64,61 +64,13 @@ def calculate_impact(customer_impact: bool, affected_services_count: int) -> str
 
 async def seed_demo_data(org_id: int, db: AsyncSession):
     """Seed demo incident data for the organization"""
+    return
     if org_id in demo_incidents:
         return  # Already seeded
     
     # Create demo incidents
     demo_data = [
-        {
-            "title": "High Memory Usage on Production API Server",
-            "description": "Memory consumption spiked to 95% on api-prod-01, causing slow response times",
-            "severity": "high",
-            "status": "investigating",
-            "category": "Performance",
-            "affected_services": ["API Gateway", "User Service", "Authentication"],
-            "customer_impact": True,
-            "estimated_affected_users": 1500,
-        },
-        {
-            "title": "Database Connection Pool Exhausted",
-            "description": "PostgreSQL connection pool reached maximum capacity, new connections failing",
-            "severity": "critical",
-            "status": "remediating",
-            "category": "Database",
-            "affected_services": ["Order Service", "Inventory", "Payments"],
-            "customer_impact": True,
-            "estimated_affected_users": 2500,
-        },
-        {
-            "title": "SSL Certificate Expiring Soon",
-            "description": "SSL certificate for api.integraite.pro expires in 7 days",
-            "severity": "medium",
-            "status": "resolved",
-            "category": "Security",
-            "affected_services": ["API Gateway"],
-            "customer_impact": False,
-            "estimated_affected_users": 0,
-        },
-        {
-            "title": "Unusual Network Traffic Pattern Detected",
-            "description": "Abnormal spike in outbound traffic detected from eu-west-1 region",
-            "severity": "medium",
-            "status": "investigating",
-            "category": "Network",
-            "affected_services": ["CDN", "Load Balancer"],
-            "customer_impact": False,
-            "estimated_affected_users": 0,
-        },
-        {
-            "title": "Redis Cache Performance Degradation",
-            "description": "Cache hit ratio dropped to 45%, causing increased database load",
-            "severity": "high",
-            "status": "remediating",
-            "category": "Performance",
-            "affected_services": ["Session Store", "Content Cache"],
-            "customer_impact": True,
-            "estimated_affected_users": 800,
-        }
+       
     ]
     
     created_incidents = []
