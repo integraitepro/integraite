@@ -927,6 +927,55 @@ async def get_incident_detail(
     )
 
 
+@router.get("/{incident_id}/execution-logs")
+async def get_incident_execution_logs(
+    incident_id: str,
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_db)
+) -> Dict[str, Any]:
+    """Get execution logs for a specific incident from incident_logs.json"""
+    
+    try:
+        # Read the incident_logs.json file
+        import os
+        logs_file_path = os.path.join(os.path.dirname(__file__), "incident_logs.json")
+        
+        logger.info(f"Looking for incident logs at: {logs_file_path}")
+        logger.info(f"Path exists: {os.path.exists(logs_file_path)}")
+        
+        if not os.path.exists(logs_file_path):
+            return {"logs": [], "message": f"No execution logs found at {logs_file_path}"}
+        
+        with open(logs_file_path, 'r', encoding='utf-8') as f:
+            all_logs = json.load(f)
+        
+        logger.info(f"Loaded {len(all_logs)} log entries, looking for incident: {incident_id}")
+        
+        # Find logs for the specific incident
+        incident_logs = None
+        for log_entry in all_logs:
+            if log_entry.get("incident_id") == incident_id:
+                incident_logs = log_entry
+                break
+        
+        if not incident_logs:
+            return {"logs": [], "message": f"No execution logs found for incident {incident_id}"}
+        
+        return {
+            "incident_id": incident_logs["incident_id"],
+            "start_time": incident_logs["start_time"],
+            "last_updated": incident_logs["last_updated"],
+            "step_count": incident_logs["step_count"],
+            "duration_seconds": incident_logs["duration_seconds"],
+            "status": incident_logs["status"],
+            "logs": incident_logs["logs"]
+        }
+        
+    except Exception as e:
+        logger.error(f"Error reading execution logs for incident {incident_id}: {e}")
+        return {"logs": [], "message": "Error loading execution logs"}
+
+
 async def convert_servicenow_to_detail_response(sn_incident_data: Dict[str, Any], incident_id: str, db: AsyncSession) -> IncidentDetailResponse:
     """Convert ServiceNow incident data to detail response format"""
     

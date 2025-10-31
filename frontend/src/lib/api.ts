@@ -12,12 +12,12 @@ const getApiBaseUrl = () => {
   // // 2. Auto-detect based on mode
   // if (import.meta.env.DEV) {
   //   // Development mode - use localhost
-  //   return 'https://api.integraite.com/api/v1'
+  //   return 'https://api.integraite.pro/api/v1'
   // } else {
   //   // Production mode - use live API
-  //   return 'https://api.integraite.com/api/v1'
+  //   return 'https://api.integraite.pro/api/v1'
   // }
-    return 'https://api.integraite.com/api/v1'
+    return 'https://api.integraite.pro/api/v1'
     // return "http://localhost:8000/api/v1"
 }
 
