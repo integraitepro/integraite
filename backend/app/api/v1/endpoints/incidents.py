@@ -1,9 +1,13 @@
 """
 Incident management API endpoints
 """
-
 from typing import List, Dict, Any, Optional
-from fastapi import APIRouter, Depends, HTTPException, status, Query
+import json
+import random
+from datetime import datetime
+
+from fastapi import APIRouter, Request, Depends, HTTPException, Query, status
+from fastapi.responses import JSONResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func, and_, or_, case
 from sqlalchemy.orm import selectinload
@@ -11,13 +15,15 @@ from datetime import datetime
 import random
 import logging
 
+from app.core.database import get_db
 from app.api.v1.endpoints.auth import get_current_active_user
 from app.models.user import User, OrganizationMember
-from app.models.incident import Incident, IncidentTimeline, IncidentHypothesis, IncidentSeverity, IncidentStatus
+from app.models.incident import (
+    Incident, IncidentTimeline, IncidentHypothesis, IncidentSeverity, IncidentStatus
+)
 from app.models.agent import AgentExecution
 from app.models.incident_extended import (
-    InfrastructureComponent, VerificationGate, 
-    IncidentExecution, PreExecutionCheck
+    InfrastructureComponent, VerificationGate, IncidentExecution, PreExecutionCheck
 )
 from app.schemas.incident import (
     IncidentCreate, IncidentUpdate, IncidentDetailResponse, IncidentListResponse,

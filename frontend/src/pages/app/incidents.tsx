@@ -1,80 +1,127 @@
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { AppLayout } from '@/components/layout/app-layout'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { cn } from '@/lib/utils'
-import { useIncidents, useIncidentStats } from '@/hooks/useIncidents'
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { AppLayout } from "@/components/layout/app-layout";
 import {
-  Search, Filter, AlertTriangle, Clock, CheckCircle2, XCircle, 
-  Activity, Server, Database, Network, Shield, Monitor, 
-  ArrowUpRight, CalendarDays, User, Zap, TrendingUp, Eye
-} from 'lucide-react'
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
+import { useIncidents, useIncidentStats } from "@/hooks/useIncidents";
+import {
+  Search,
+  Filter,
+  AlertTriangle,
+  Clock,
+  CheckCircle2,
+  XCircle,
+  Activity,
+  Server,
+  Database,
+  Network,
+  Shield,
+  Monitor,
+  ArrowUpRight,
+  CalendarDays,
+  User,
+  Zap,
+  TrendingUp,
+  Eye,
+} from "lucide-react";
 
 export function IncidentsPage() {
-  const navigate = useNavigate()
-  const [searchTerm, setSearchTerm] = useState('')
-  const [selectedSeverity, setSelectedSeverity] = useState<string>('all')
-  const [selectedStatus, setSelectedStatus] = useState<string>('all')
+  const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedSeverity, setSelectedSeverity] = useState<string>("all");
+  const [selectedStatus, setSelectedStatus] = useState<string>("all");
 
   // Fetch incidents and stats from API
-  const { data: statsData, isLoading: statsLoading } = useIncidentStats()
-  const { data: incidentsData, isLoading: incidentsLoading, error: incidentsError } = useIncidents({
-    severity: selectedSeverity === 'all' ? undefined : selectedSeverity,
-    status: selectedStatus === 'all' ? undefined : selectedStatus,
+  const { data: statsData, isLoading: statsLoading } = useIncidentStats();
+  const {
+    data: incidentsData,
+    isLoading: incidentsLoading,
+    error: incidentsError,
+  } = useIncidents({
+    severity: selectedSeverity === "all" ? undefined : selectedSeverity,
+    status: selectedStatus === "all" ? undefined : selectedStatus,
     search: searchTerm || undefined,
-  })
+  });
 
-  const incidents = incidentsData?.incidents || []
+  const incidents = incidentsData?.incidents || [];
   const stats = statsData || {
     total: 0,
     critical: 0,
     investigating: 0,
     remediating: 0,
     resolved: 0,
-  }
+  };
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
-      case 'critical': return 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900/20 dark:text-red-400'
-      case 'high': return 'bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-900/20 dark:text-orange-400'
-      case 'medium': return 'bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900/20 dark:text-yellow-400'
-      case 'low': return 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900/20 dark:text-green-400'
-      default: return 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-900/20 dark:text-gray-400'
+      case "critical":
+        return "bg-red-100 text-red-800 border-red-200 dark:bg-red-900/20 dark:text-red-400";
+      case "high":
+        return "bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-900/20 dark:text-orange-400";
+      case "medium":
+        return "bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900/20 dark:text-yellow-400";
+      case "low":
+        return "bg-green-100 text-green-800 border-green-200 dark:bg-green-900/20 dark:text-green-400";
+      default:
+        return "bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-900/20 dark:text-gray-400";
     }
-  }
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'investigating': return 'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/20 dark:text-blue-400'
-      case 'remediating': return 'bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-900/20 dark:text-purple-400'
-      case 'resolved': return 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900/20 dark:text-green-400'
-      case 'closed': return 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-900/20 dark:text-gray-400'
-      default: return 'bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-900/20 dark:text-orange-400'
+      case "investigating":
+        return "bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/20 dark:text-blue-400";
+      case "remediating":
+        return "bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-900/20 dark:text-purple-400";
+      case "resolved":
+        return "bg-green-100 text-green-800 border-green-200 dark:bg-green-900/20 dark:text-green-400";
+      case "closed":
+        return "bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-900/20 dark:text-gray-400";
+      default:
+        return "bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-900/20 dark:text-orange-400";
     }
-  }
+  };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'investigating': return <Eye className="h-3 w-3" />
-      case 'remediating': return <Activity className="h-3 w-3" />
-      case 'resolved': return <CheckCircle2 className="h-3 w-3" />
-      case 'closed': return <XCircle className="h-3 w-3" />
-      default: return <Clock className="h-3 w-3" />
+      case "investigating":
+        return <Eye className="h-3 w-3" />;
+      case "remediating":
+        return <Activity className="h-3 w-3" />;
+      case "resolved":
+        return <CheckCircle2 className="h-3 w-3" />;
+      case "closed":
+        return <XCircle className="h-3 w-3" />;
+      default:
+        return <Clock className="h-3 w-3" />;
     }
-  }
+  };
 
   const formatTimeAgo = (dateString: string) => {
-    const now = new Date()
-    const date = new Date(dateString)
-    const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60))
-    
-    if (diffInMinutes < 60) return `${diffInMinutes} min ago`
-    if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)} hour${Math.floor(diffInMinutes / 60) > 1 ? 's' : ''} ago`
-    return `${Math.floor(diffInMinutes / 1440)} day${Math.floor(diffInMinutes / 1440) > 1 ? 's' : ''} ago`
-  }
+    const now = new Date();
+    const date = new Date(dateString);
+    const diffInMinutes = Math.floor(
+      (now.getTime() - date.getTime()) / (1000 * 60)
+    );
+
+    if (diffInMinutes < 60) return `${diffInMinutes} min ago`;
+    if (diffInMinutes < 1440)
+      return `${Math.floor(diffInMinutes / 60)} hour${
+        Math.floor(diffInMinutes / 60) > 1 ? "s" : ""
+      } ago`;
+    return `${Math.floor(diffInMinutes / 1440)} day${
+      Math.floor(diffInMinutes / 1440) > 1 ? "s" : ""
+    } ago`;
+  };
 
   // Handle loading and error states
   if (incidentsLoading || statsLoading) {
@@ -87,7 +134,7 @@ export function IncidentsPage() {
           </div>
         </div>
       </AppLayout>
-    )
+    );
   }
 
   if (incidentsError) {
@@ -96,12 +143,16 @@ export function IncidentsPage() {
         <div className="flex items-center justify-center min-h-[400px]">
           <div className="text-center">
             <AlertTriangle className="h-12 w-12 text-red-500 mx-auto mb-4" />
-            <h3 className="text-lg font-medium mb-2">Failed to load incidents</h3>
-            <p className="text-muted-foreground">Please try refreshing the page</p>
+            <h3 className="text-lg font-medium mb-2">
+              Failed to load incidents
+            </h3>
+            <p className="text-muted-foreground">
+              Please try refreshing the page
+            </p>
           </div>
         </div>
       </AppLayout>
-    )
+    );
   }
 
   return (
@@ -133,7 +184,9 @@ export function IncidentsPage() {
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">Total</p>
+                  <p className="text-sm font-medium text-muted-foreground">
+                    Total
+                  </p>
                   <p className="text-2xl font-bold">{stats.total}</p>
                 </div>
                 <AlertTriangle className="h-8 w-8 text-blue-600" />
@@ -144,8 +197,12 @@ export function IncidentsPage() {
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">Critical</p>
-                  <p className="text-2xl font-bold text-red-600">{stats.critical}</p>
+                  <p className="text-sm font-medium text-muted-foreground">
+                    Critical
+                  </p>
+                  <p className="text-2xl font-bold text-red-600">
+                    {stats.critical}
+                  </p>
                 </div>
                 <XCircle className="h-8 w-8 text-red-600" />
               </div>
@@ -155,8 +212,12 @@ export function IncidentsPage() {
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">Investigating</p>
-                  <p className="text-2xl font-bold text-blue-600">{stats.investigating}</p>
+                  <p className="text-sm font-medium text-muted-foreground">
+                    Investigating
+                  </p>
+                  <p className="text-2xl font-bold text-blue-600">
+                    {stats.investigating}
+                  </p>
                 </div>
                 <Eye className="h-8 w-8 text-blue-600" />
               </div>
@@ -166,8 +227,12 @@ export function IncidentsPage() {
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">Remediating</p>
-                  <p className="text-2xl font-bold text-purple-600">{stats.remediating}</p>
+                  <p className="text-sm font-medium text-muted-foreground">
+                    Remediating
+                  </p>
+                  <p className="text-2xl font-bold text-purple-600">
+                    {stats.remediating}
+                  </p>
                 </div>
                 <Activity className="h-8 w-8 text-purple-600" />
               </div>
@@ -177,8 +242,12 @@ export function IncidentsPage() {
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">Resolved</p>
-                  <p className="text-2xl font-bold text-green-600">{stats.resolved}</p>
+                  <p className="text-sm font-medium text-muted-foreground">
+                    Resolved
+                  </p>
+                  <p className="text-2xl font-bold text-green-600">
+                    {stats.resolved}
+                  </p>
                 </div>
                 <CheckCircle2 className="h-8 w-8 text-green-600" />
               </div>
@@ -197,7 +266,7 @@ export function IncidentsPage() {
               className="pl-10"
             />
           </div>
-          <select 
+          <select
             value={selectedSeverity}
             onChange={(e) => setSelectedSeverity(e.target.value)}
             className="px-3 py-2 border rounded-md bg-background"
@@ -208,7 +277,7 @@ export function IncidentsPage() {
             <option value="medium">Medium</option>
             <option value="low">Low</option>
           </select>
-          <select 
+          <select
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
             className="px-3 py-2 border rounded-md bg-background"
@@ -224,8 +293,8 @@ export function IncidentsPage() {
         {/* Incidents List */}
         <div className="space-y-4">
           {incidents.map((incident) => (
-            <Card 
-              key={incident.id} 
+            <Card
+              key={incident.id}
               className="hover:shadow-md transition-all duration-200 cursor-pointer border-l-4"
               style={{ borderLeftColor: incident.severity === 'critical' ? '#dc2626' : incident.severity === 'high' ? '#ea580c' : incident.severity === 'medium' ? '#ca8a04' : '#16a34a' }}
               onClick={() => navigate(`/app/incident/${incident.incident_id}`)}
@@ -252,12 +321,25 @@ export function IncidentsPage() {
 
                   {/* Status and Severity */}
                   <div className="flex items-center space-x-3">
-                    <Badge className={cn("text-xs border", getSeverityColor(incident.severity))}>
+                    <Badge
+                      className={cn(
+                        "text-xs border",
+                        getSeverityColor(incident.severity)
+                      )}
+                    >
                       {incident.severity.toUpperCase()}
                     </Badge>
-                    <Badge className={cn("text-xs border flex items-center space-x-1", getStatusColor(incident.status))}>
+                    <Badge
+                      className={cn(
+                        "text-xs border flex items-center space-x-1",
+                        getStatusColor(incident.status)
+                      )}
+                    >
                       {getStatusIcon(incident.status)}
-                      <span>{incident.status.charAt(0).toUpperCase() + incident.status.slice(1)}</span>
+                      <span>
+                        {incident.status.charAt(0).toUpperCase() +
+                          incident.status.slice(1)}
+                      </span>
                     </Badge>
                     <Badge variant="outline" className="text-xs">
                       {incident.category}
@@ -270,40 +352,73 @@ export function IncidentsPage() {
                   {/* Metrics */}
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4 py-3 border-t border-b">
                     <div className="text-center">
-                      <p className="text-xs text-muted-foreground">Assigned Agent</p>
-                      <p className="text-sm font-medium">{incident.assigned_agent || 'Unassigned'}</p>
+                      <p className="text-xs text-muted-foreground">
+                        Assigned Agent
+                      </p>
+                      <p className="text-sm font-medium">
+                        {incident.assigned_agent || "Unassigned"}
+                      </p>
                     </div>
                     <div className="text-center">
-                      <p className="text-xs text-muted-foreground">Agents Involved</p>
-                      <p className="text-sm font-medium">{incident.agents_involved}</p>
+                      <p className="text-xs text-muted-foreground">
+                        Agents Involved
+                      </p>
+                      <p className="text-sm font-medium">
+                        {incident.agents_involved}
+                      </p>
                     </div>
                     <div className="text-center">
-                      <p className="text-xs text-muted-foreground">Confidence</p>
-                      <p className="text-sm font-medium">{Math.round(incident.confidence)}%</p>
+                      <p className="text-xs text-muted-foreground">
+                        Confidence
+                      </p>
+                      <p className="text-sm font-medium">
+                        {Math.round(incident.confidence)}%
+                      </p>
                     </div>
                     <div className="text-center">
-                      <p className="text-xs text-muted-foreground">Est. Resolution</p>
-                      <p className="text-sm font-medium">{incident.estimated_resolution}</p>
+                      <p className="text-xs text-muted-foreground">
+                        Est. Resolution
+                      </p>
+                      <p className="text-sm font-medium">
+                        {incident.estimated_resolution}
+                      </p>
                     </div>
                   </div>
 
                   {/* Recent Actions */}
                   <div className="space-y-2">
-                    <p className="text-xs font-medium text-muted-foreground">Recent Agent Actions</p>
+                    <p className="text-xs font-medium text-muted-foreground">
+                      Recent Agent Actions
+                    </p>
                     <div className="space-y-1">
                       {incident.actions.slice(0, 2).map((action, index) => (
-                        <div key={index} className="flex items-center space-x-2 text-xs">
-                          <div className={cn(
-                            "w-2 h-2 rounded-full",
-                            action.type === 'detect' ? 'bg-blue-500' :
-                            action.type === 'analyze' ? 'bg-purple-500' :
-                            action.type === 'remediate' ? 'bg-orange-500' :
-                            action.type === 'optimize' ? 'bg-green-500' :
-                            action.type === 'monitor' ? 'bg-cyan-500' : 'bg-gray-500'
-                          )} />
-                          <span className="text-muted-foreground">{action.description}</span>
+                        <div
+                          key={index}
+                          className="flex items-center space-x-2 text-xs"
+                        >
+                          <div
+                            className={cn(
+                              "w-2 h-2 rounded-full",
+                              action.type === "detect"
+                                ? "bg-blue-500"
+                                : action.type === "analyze"
+                                ? "bg-purple-500"
+                                : action.type === "remediate"
+                                ? "bg-orange-500"
+                                : action.type === "optimize"
+                                ? "bg-green-500"
+                                : action.type === "monitor"
+                                ? "bg-cyan-500"
+                                : "bg-gray-500"
+                            )}
+                          />
+                          <span className="text-muted-foreground">
+                            {action.description}
+                          </span>
                           <span className="text-muted-foreground">•</span>
-                          <span className="text-muted-foreground">{action.time}</span>
+                          <span className="text-muted-foreground">
+                            {action.time}
+                          </span>
                         </div>
                       ))}
                     </div>
@@ -314,15 +429,22 @@ export function IncidentsPage() {
                     <div className="flex items-center space-x-4">
                       <span className="flex items-center space-x-1">
                         <CalendarDays className="h-3 w-3" />
-                        <span>Started {formatTimeAgo(incident.start_time)}</span>
+                        <span>
+                          Started {formatTimeAgo(incident.start_time)}
+                        </span>
                       </span>
                       <span className="flex items-center space-x-1">
                         <Clock className="h-3 w-3" />
-                        <span>Updated {formatTimeAgo(incident.last_update)}</span>
+                        <span>
+                          Updated {formatTimeAgo(incident.last_update)}
+                        </span>
                       </span>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <span>Affected: {incident.affected_services.length} service{incident.affected_services.length !== 1 ? 's' : ''}</span>
+                      <span>
+                        Affected: {incident.affected_services.length} service
+                        {incident.affected_services.length !== 1 ? "s" : ""}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -336,13 +458,15 @@ export function IncidentsPage() {
             <AlertTriangle className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
             <h3 className="text-lg font-medium mb-2">No incidents found</h3>
             <p className="text-muted-foreground">
-              {searchTerm || selectedSeverity !== 'all' || selectedStatus !== 'all' 
-                ? 'Try adjusting your filters' 
-                : 'No incidents match your criteria'}
+              {searchTerm ||
+              selectedSeverity !== "all" ||
+              selectedStatus !== "all"
+                ? "Try adjusting your filters"
+                : "No incidents match your criteria"}
             </p>
           </div>
         )}
       </div>
     </AppLayout>
-  )
+  );
 }

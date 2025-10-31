@@ -1,39 +1,41 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { ThemeProvider } from '@/components/theme-provider'
-import { AuthGuard, PublicGuard } from '@/components/auth-guard'
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ThemeProvider } from "@/components/theme-provider";
+import { AuthGuard, PublicGuard } from "@/components/auth-guard";
+import WebhookDisplay from "./components/WebhookDisplay";
 
 // Marketing pages
-import { LandingPage } from '@/pages/marketing/landing'
-import { HowItWorksPage } from '@/pages/marketing/how-it-works'
-import { IntegrationsPage } from '@/pages/marketing/integrations'
-import { SecurityPage } from '@/pages/marketing/security'
-import { PricingPage } from '@/pages/marketing/pricing'
-import { DocsPage } from '@/pages/marketing/docs'
-import { StatusPage } from '@/pages/marketing/status'
-import { PrivacyPage } from '@/pages/marketing/privacy'
-import { TermsPage } from '@/pages/marketing/terms'
+import { LandingPage } from "@/pages/marketing/landing";
+import { HowItWorksPage } from "@/pages/marketing/how-it-works";
+import { IntegrationsPage } from "@/pages/marketing/integrations";
+import { SecurityPage } from "@/pages/marketing/security";
+import { PricingPage } from "@/pages/marketing/pricing";
+import { DocsPage } from "@/pages/marketing/docs";
+import { StatusPage } from "@/pages/marketing/status";
+import { PrivacyPage } from "@/pages/marketing/privacy";
+import { TermsPage } from "@/pages/marketing/terms";
 
 // Auth pages
-import { LoginPage } from '@/pages/auth/login'
-import { SignupPage } from '@/pages/auth/signup'
+import { LoginPage } from "@/pages/auth/login";
+import { SignupPage } from "@/pages/auth/signup";
 
 // App pages
-import { DashboardPage } from '@/pages/app/dashboard'
-import { OnboardingPage } from '@/pages/app/onboarding'
-import { AgentsPage } from '@/pages/app/agents'
-import { IncidentsPage } from '@/pages/app/incidents'
-import { IncidentDetailPage } from '@/pages/app/incident-detail'
-import { AutomationsPage } from '@/pages/app/automations'
-import AppIntegrationsPage from '@/pages/app/integrations'
-import { EvidencePage } from '@/pages/app/evidence'
-import { ApprovalsPage } from '@/pages/app/approvals'
-import { UsersPage } from '@/pages/app/users'
-import { BillingPage } from '@/pages/app/billing'
-import { AuditPage } from '@/pages/app/audit'
-import { SettingsPage } from '@/pages/app/settings'
+import { DashboardPage } from "@/pages/app/dashboard";
+import { OnboardingPage } from "@/pages/app/onboarding";
+import { AgentsPage } from "@/pages/app/agents";
+import { IncidentsPage } from "@/pages/app/incidents";
+import { IncidentsDummyPage } from "@/pages/app/incidentsDummy";
+import { IncidentDetailPage } from "@/pages/app/incident-detail";
+import { AutomationsPage } from "@/pages/app/automations";
+import AppIntegrationsPage from "@/pages/app/integrations";
+import { EvidencePage } from "@/pages/app/evidence";
+import { ApprovalsPage } from "@/pages/app/approvals";
+import { UsersPage } from "@/pages/app/users";
+import { BillingPage } from "@/pages/app/billing";
+import { AuditPage } from "@/pages/app/audit";
+import { SettingsPage } from "@/pages/app/settings";
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient();
 
 function App() {
   return (
@@ -51,11 +53,25 @@ function App() {
             <Route path="/status" element={<StatusPage />} />
             <Route path="/privacy" element={<PrivacyPage />} />
             <Route path="/terms" element={<TermsPage />} />
-            
+
             {/* Auth routes */}
-            <Route path="/login" element={<PublicGuard><LoginPage /></PublicGuard>} />
-            <Route path="/signup" element={<PublicGuard><SignupPage /></PublicGuard>} />
-            
+            <Route
+              path="/login"
+              element={
+                <PublicGuard>
+                  <LoginPage />
+                </PublicGuard>
+              }
+            />
+            <Route
+              path="/signup"
+              element={
+                <PublicGuard>
+                  <SignupPage />
+                </PublicGuard>
+              }
+            />
+
             {/* App routes */}
             <Route path="/app" element={<AuthGuard><DashboardPage /></AuthGuard>} />
             <Route path="/app/onboarding" element={<AuthGuard><OnboardingPage /></AuthGuard>} />
@@ -74,7 +90,9 @@ function App() {
         </Router>
       </ThemeProvider>
     </QueryClientProvider>
-  )
+    // <IncidentsPage />
+    // <WebhookDisplay />
+  );
 }
 
-export default App
+export default App;
