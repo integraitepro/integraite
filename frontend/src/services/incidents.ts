@@ -243,6 +243,24 @@ export interface IncidentStats {
   resolved: number
 }
 
+export interface ExecutionLogStep {
+  step_number: number
+  timestamp: string
+  step_type: string
+  data: Record<string, any>
+}
+
+export interface ExecutionLogs {
+  incident_id: string
+  start_time: string
+  last_updated: string
+  step_count: number
+  duration_seconds: number
+  status: string
+  logs: ExecutionLogStep[]
+  message?: string
+}
+
 export interface IncidentListQuery {
   severity?: string
   status?: string
@@ -304,5 +322,9 @@ export const incidentsService = {
 
   async deleteIncident(id: string): Promise<{ message: string }> {
     return api.delete<{ message: string }>(`/incidents/${id}`)
+  },
+
+  async getExecutionLogs(incidentId: string): Promise<ExecutionLogs> {
+    return api.get<ExecutionLogs>(`/incidents/${incidentId}/execution-logs`)
   },
 }

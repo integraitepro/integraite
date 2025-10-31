@@ -87,3 +87,13 @@ export const useDeleteIncident = () => {
     },
   })
 }
+
+export const useExecutionLogs = (incidentId: string | null) => {
+  return useQuery({
+    queryKey: ['incident', 'execution-logs', incidentId],
+    queryFn: () => incidentsService.getExecutionLogs(incidentId!),
+    enabled: !!incidentId,
+    refetchInterval: 2000, // Poll every 2 seconds for real-time updates
+    staleTime: 1000, // Consider data stale after 1 second
+  })
+}

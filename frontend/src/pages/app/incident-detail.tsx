@@ -1,36 +1,47 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/app-layout'
-import { useIncident } from '@/hooks/useIncidents'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { useExecutionLogs } from '@/hooks/useIncidents'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { cn } from '@/lib/utils'
+import type { ExecutionLogStep } from '@/services/incidents'
 import {
   ArrowLeft, Clock, AlertTriangle, CheckCircle2, Activity, Eye, 
-  Server, Database, Network, Shield, Monitor, Bot, Brain, Zap,
-  Play, Pause, RotateCcw, GitBranch, Target, Layers, Code,
-  TrendingUp, TrendingDown, Cpu, MemoryStick, HardDrive,
-  Calendar, User, ExternalLink, Download, Share2
+  Server, Terminal, Code, PlayCircle, Pause, CheckSquare,
+  Calendar, User, ExternalLink, Download, Share2, Zap,
+  Settings, MessageSquare, FileText, GitBranch, Timer,
+  BarChart3, TrendingUp, Cpu, Monitor, Layers
 } from 'lucide-react'
 
 export function IncidentDetailPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const [activeTab, setActiveTab] = useState<'execution' | 'agents' | 'timeline' | 'hypotheses' | 'verification' | 'provenance' | 'evidence'>('execution')
   
-  // Fetch incident data from API
-  const { data: incident, isLoading, error } = useIncident(id || null)
-  
+  // Fetch execution logs from API with polling
+  const { data: executionLogs, isLoading, error } = useExecutionLogs(id || null)
+
   // Handle loading and error states
   if (isLoading) {
     return (
       <AppLayout>
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="flex items-center space-x-2">
-            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
-            <span>Loading incident details...</span>
+        <div className="flex items-center justify-center min-h-[70vh]">
+          <div className="text-center">
+            <div className="relative mb-6">
+              <div className="animate-spin rounded-full h-16 w-16 border-4 border-primary/20 border-t-primary mx-auto"></div>
+              <div className="absolute inset-0 rounded-full h-16 w-16 border-4 border-transparent border-r-primary/40 animate-pulse mx-auto"></div>
+            </div>
+            <div className="space-y-2">
+              <h3 className="text-lg font-semibold text-foreground">Loading Incident Details</h3>
+              <p className="text-muted-foreground">Fetching execution logs and analysis...</p>
+              <div className="flex items-center justify-center space-x-1 mt-4">
+                <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+                <div className="w-2 h-2 bg-primary rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
+                <div className="w-2 h-2 bg-primary rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
+              </div>
+            </div>
           </div>
         </div>
       </AppLayout>
@@ -40,30 +51,48 @@ export function IncidentDetailPage() {
   if (error) {
     return (
       <AppLayout>
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="text-center">
-            <AlertTriangle className="h-12 w-12 text-red-500 mx-auto mb-4" />
-            <h3 className="text-lg font-medium mb-2">Failed to load incident</h3>
-            <p className="text-muted-foreground mb-4">Please try refreshing the page</p>
-            <Button onClick={() => navigate('/app/incidents')}>
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Incidents
-            </Button>
+        <div className="flex items-center justify-center min-h-[70vh]">
+          <div className="text-center max-w-md">
+            <div className="relative mb-6">
+              <div className="w-20 h-20 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto">
+                <AlertTriangle className="h-10 w-10 text-red-600 dark:text-red-400" />
+              </div>
+              <div className="absolute -top-1 -right-1 w-6 h-6 bg-red-500 rounded-full animate-ping"></div>
+            </div>
+            <h3 className="text-xl font-bold text-foreground mb-2">Unable to Load Execution Logs</h3>
+            <p className="text-muted-foreground mb-6">We encountered an error while fetching the incident execution data. Please try again.</p>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Button onClick={() => window.location.reload()} variant="default">
+                <AlertTriangle className="mr-2 h-4 w-4" />
+                Retry
+              </Button>
+              <Button onClick={() => navigate('/app/incidents')} variant="outline">
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Back to Incidents
+              </Button>
+            </div>
           </div>
         </div>
       </AppLayout>
     )
   }
   
-  if (!incident) {
+  if (!executionLogs || !executionLogs.logs || executionLogs.logs.length === 0) {
     return (
       <AppLayout>
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="text-center">
-            <AlertTriangle className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-            <h3 className="text-lg font-medium mb-2">Incident not found</h3>
-            <p className="text-muted-foreground mb-4">The requested incident could not be found.</p>
-            <Button onClick={() => navigate('/app/incidents')}>
+        <div className="flex items-center justify-center min-h-[70vh]">
+          <div className="text-center max-w-md">
+            <div className="w-20 h-20 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-6">
+              <FileText className="h-10 w-10 text-gray-500" />
+            </div>
+            <h3 className="text-xl font-bold text-foreground mb-2">No Execution Logs Found</h3>
+            <p className="text-muted-foreground mb-2">
+              {executionLogs?.message || `No execution logs are available for incident ${id}`}
+            </p>
+            <p className="text-sm text-muted-foreground mb-6">
+              The incident may not have started execution yet, or logs are still being generated.
+            </p>
+            <Button onClick={() => navigate('/app/incidents')} variant="outline">
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Incidents
             </Button>
@@ -73,1044 +102,363 @@ export function IncidentDetailPage() {
     )
   }
 
-  const getSeverityColor = (severity: string) => {
-    switch (severity) {
-      case 'critical': return 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900/20 dark:text-red-400'
-      case 'high': return 'bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-900/20 dark:text-orange-400'
-      case 'medium': return 'bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900/20 dark:text-yellow-400'
+  const getStepIcon = (stepType: string) => {
+    switch (stepType) {
+      case 'INCIDENT_RECEIVED': return <AlertTriangle className="h-4 w-4" />
+      case 'TOOL_CALL': return <Settings className="h-4 w-4" />
+      case 'TOOL_RESULT': return <CheckSquare className="h-4 w-4" />
+      case 'AGENT_RESPONSE': return <MessageSquare className="h-4 w-4" />
+      case 'INCIDENT_COMPLETED': return <CheckCircle2 className="h-4 w-4" />
+      default: return <Activity className="h-4 w-4" />
+    }
+  }
+
+  const getStepTypeColor = (stepType: string) => {
+    switch (stepType) {
+      case 'INCIDENT_RECEIVED': return 'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/20 dark:text-blue-400'
+      case 'TOOL_CALL': return 'bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-900/20 dark:text-purple-400'
+      case 'TOOL_RESULT': return 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900/20 dark:text-green-400'
+      case 'AGENT_RESPONSE': return 'bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-900/20 dark:text-orange-400'
+      case 'INCIDENT_COMPLETED': return 'bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-900/20 dark:text-emerald-400'
       default: return 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-900/20 dark:text-gray-400'
     }
   }
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'investigating': return 'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/20 dark:text-blue-400'
-      case 'remediating': return 'bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-900/20 dark:text-purple-400'
-      case 'resolved': return 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900/20 dark:text-green-400'
-      default: return 'bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-900/20 dark:text-orange-400'
+      case 'COMPLETED': return 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900/20 dark:text-green-400'
+      case 'IN_PROGRESS': return 'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/20 dark:text-blue-400'
+      case 'FAILED': return 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900/20 dark:text-red-400'
+      default: return 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-900/20 dark:text-gray-400'
     }
   }
 
-  const formatTimeAgo = (dateString: string) => {
-    const now = new Date()
-    const date = new Date(dateString)
-    const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60))
-    
-    if (diffInMinutes < 60) return `${diffInMinutes} min ago`
-    if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)} hour${Math.floor(diffInMinutes / 60) > 1 ? 's' : ''} ago`
-    return `${Math.floor(diffInMinutes / 1440)} day${Math.floor(diffInMinutes / 1440) > 1 ? 's' : ''} ago`
+  const formatTimestamp = (timestamp: string) => {
+    return new Date(timestamp).toLocaleTimeString()
   }
 
-  const tabContent = {
-    execution: (
-      <div className="space-y-6">
-        {/* SRE Execution Plan */}
-        {incident.sre_execution && (
-          <Card>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle className="flex items-center space-x-2">
-                    <Bot className="h-5 w-5 text-blue-600" />
-                    <span>SRE Agent Execution</span>
-                  </CardTitle>
-                  <CardDescription>
-                    Autonomous SRE agent handling incident resolution
-                  </CardDescription>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Badge className={cn(
-                    incident.sre_execution.status === 'success' ? 'bg-green-100 text-green-800 border-green-200' :
-                    incident.sre_execution.status === 'running' ? 'bg-blue-100 text-blue-800 border-blue-200' :
-                    incident.sre_execution.status === 'failed' ? 'bg-red-100 text-red-800 border-red-200' :
-                    'bg-gray-100 text-gray-800 border-gray-200'
-                  )}>
-                    <Activity className="mr-1 h-3 w-3" />
-                    {incident.sre_execution.status}
-                  </Badge>
-                  {incident.sre_execution.agents && incident.sre_execution.agents.length > 0 && (
-                    <span className="text-sm text-muted-foreground">
-                      {incident.sre_execution.agents[0].progress}% complete
-                    </span>
-                  )}
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {incident.sre_execution.agents && incident.sre_execution.agents.length > 0 && (
-                <Progress value={incident.sre_execution.agents[0].progress} className="h-3" />
-              )}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                <div>
-                  <span className="text-muted-foreground">Agent:</span>
-                  <span className="ml-2 font-medium">{incident.sre_execution.agent_name}</span>
-                </div>
-                <div>
-                  <span className="text-muted-foreground">Started:</span>
-                  <span className="ml-2 font-medium">{formatTimeAgo(incident.sre_execution.started_at)}</span>
-                </div>
-                {incident.sre_execution.target_ip && (
-                  <div>
-                    <span className="text-muted-foreground">Target:</span>
-                    <span className="ml-2 font-medium">{incident.sre_execution.target_ip}</span>
-                  </div>
-                )}
-                {incident.sre_execution.priority && (
-                  <div>
-                    <span className="text-muted-foreground">Priority:</span>
-                    <span className="ml-2 font-medium">{incident.sre_execution.priority}</span>
-                  </div>
-                )}
-              </div>
-              
-              {incident.sre_execution.resolution_summary && (
-                <div>
-                  <p className="text-sm font-medium mb-1">Resolution Summary</p>
-                  <p className="text-sm text-muted-foreground">{incident.sre_execution.resolution_summary}</p>
-                </div>
-              )}
-              
-              {incident.sre_execution.final_hypothesis && (
-                <div>
-                  <p className="text-sm font-medium mb-1">Final Hypothesis</p>
-                  <p className="text-sm text-muted-foreground">{incident.sre_execution.final_hypothesis}</p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        )}
-        
-        {/* Legacy Execution Plan Overview */}
-        {incident.executions && incident.executions.length > 0 && (
-          <Card>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle className="flex items-center space-x-2">
-                    <Target className="h-5 w-5 text-blue-600" />
-                    <span>Execution Plan</span>
-                  </CardTitle>
-                  <CardDescription>
-                    Automated remediation plan with real-time progress tracking
-                  </CardDescription>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Badge className="bg-green-100 text-green-800 border-green-200">
-                    <Activity className="mr-1 h-3 w-3" />
-                    executing
-                  </Badge>
-                   <span className="text-sm text-muted-foreground">
-                     {incident.current_progress}% complete
-                   </span>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <Progress value={incident.current_progress} className="h-3" />
-              <div className="text-sm text-muted-foreground">
-                Estimated duration: 15 minutes • Plan ID: plan-001
-              </div>
-            </CardContent>
-          </Card>
-        )}
+  const formatDuration = (seconds: number) => {
+    if (seconds < 60) return `${seconds.toFixed(1)}s`
+    const minutes = Math.floor(seconds / 60)
+    const remainingSeconds = Math.floor(seconds % 60)
+    return `${minutes}m ${remainingSeconds}s`
+  }
 
-        {/* Pre-execution Checks */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-              <CheckCircle2 className="h-5 w-5 text-green-600" />
-              <span>Pre-execution Checks</span>
-            </CardTitle>
-            <CardDescription>
-              Safety checks before executing remediation actions
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {[
-                'System backup verification',
-                'Resource availability check',
-                'Dependency health validation',
-                'Rollback plan preparation'
-              ].map((check, index) => (
-                <div key={index} className="flex items-center space-x-3">
-                  <CheckCircle2 className="h-4 w-4 text-green-600" />
-                  <span className="text-sm">{check}</span>
-                  <Badge variant="outline" className="text-xs">Passed</Badge>
-                </div>
-              ))}
+  const renderLogData = (step: ExecutionLogStep) => {
+    const { data } = step
+    
+    // Function to format text with **bold** markdown-style formatting
+    const formatText = (text: string) => {
+      if (!text) return text
+      
+      const parts = text.split(/(\*\*.*?\*\*)/)
+      return parts.map((part, index) => {
+        if (part.startsWith('**') && part.endsWith('**')) {
+          const boldText = part.slice(2, -2)
+          return <strong key={index}>{boldText}</strong>
+        }
+        return part
+      })
+    }
+    
+    if (step.step_type === 'TOOL_CALL') {
+      return (
+        <div className="mt-4 p-4 bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 rounded-xl border border-purple-200 dark:border-purple-700">
+          <div className="flex items-center space-x-2 mb-3">
+            <div className="p-1.5 bg-purple-200 dark:bg-purple-700 rounded-lg">
+              <Code className="h-4 w-4 text-purple-700 dark:text-purple-300" />
             </div>
-          </CardContent>
-        </Card>
-
-        {/* Infrastructure Impact Analysis */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-              <Layers className="h-5 w-5 text-purple-600" />
-              <span>Infrastructure Analysis</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-             <div className="space-y-4">
-               {incident.infrastructure_components.map((component: any, index: number) => (
-                <Card key={index} className="border-l-4 border-l-orange-500">
-                  <CardContent className="p-4">
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-3">
-                           <div className="w-8 h-8 rounded-lg bg-orange-100 dark:bg-orange-900/20 flex items-center justify-center">
-                             {component.component_type === 'EC2 Instance' && <Server className="h-4 w-4 text-orange-600" />}
-                             {component.component_type === 'Load Balancer' && <Network className="h-4 w-4 text-orange-600" />}
-                             {component.component_type === 'Redis Cluster' && <Database className="h-4 w-4 text-orange-600" />}
-                           </div>
-                           <div>
-                             <h4 className="font-medium">{component.name}</h4>
-                             <p className="text-sm text-muted-foreground">{component.component_type} • {component.layer} Layer</p>
-                           </div>
-                        </div>
-                        <Badge className={cn(
-                          "text-xs",
-                          component.status === 'healthy' ? 'bg-green-100 text-green-800' : 'bg-orange-100 text-orange-800'
-                        )}>
-                          {component.status}
-                        </Badge>
-                      </div>
-                      
-                      <div className="grid grid-cols-3 gap-4">
-                        {Object.entries(component.metrics).map(([key, metric]: [string, any]) => (
-                          <div key={key} className="text-center">
-                            <p className="text-xs text-muted-foreground capitalize">{key}</p>
-                            <p className="text-sm font-medium">
-                              {metric.current}{metric.unit}
-                              <span className={cn(
-                                "ml-1 text-xs",
-                                metric.current > metric.normal ? 'text-red-600' : 'text-green-600'
-                              )}>
-                                ({metric.current > metric.normal ? '+' : ''}{metric.current - metric.normal})
-                              </span>
-                            </p>
-                          </div>
-                        ))}
-                      </div>
-                      
-                         <div className="pt-2 border-t">
-                           <p className="text-xs text-muted-foreground mb-1">Agent Actions:</p>
-                           <div className="flex flex-wrap gap-1">
-                             {component.agent_actions.map((action: string, idx: number) => (
-                             <Badge key={idx} variant="outline" className="text-xs">
-                               {action}
-                             </Badge>
-                           ))}
-                         </div>
-                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+            <span className="font-semibold text-purple-900 dark:text-purple-100">Tool Execution: {data.tool_name}</span>
+          </div>
+          <div className="space-y-3">
+            <div>
+              <div className="text-sm font-medium text-purple-800 dark:text-purple-200 mb-2">Parameters:</div>
+              <pre className="text-xs bg-white dark:bg-gray-900 p-3 rounded-lg border border-purple-200 dark:border-purple-700 overflow-auto max-h-40">
+                {JSON.stringify(data.arguments, null, 2)}
+              </pre>
             </div>
-          </CardContent>
-        </Card>
-      </div>
-    ),
-    
-     agents: (
-       <div className="space-y-6">
-         {/* SRE Agents */}
-         {incident.sre_execution && incident.sre_execution.agents && incident.sre_execution.agents.length > 0 && (
-           <div className="space-y-4">
-             <h3 className="text-lg font-medium flex items-center space-x-2">
-               <Bot className="h-5 w-5 text-blue-600" />
-               <span>SRE Agents</span>
-             </h3>
-             {incident.sre_execution.agents.map((agent: any, index: number) => (
-               <Card key={agent.id} className="border-l-4 border-l-blue-500">
-                 <CardHeader>
-                   <div className="flex items-center justify-between">
-                     <div className="flex items-center space-x-3">
-                       <div className="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center">
-                         <Bot className="h-5 w-5 text-blue-600" />
-                       </div>
-                        <div>
-                          <CardTitle className="text-lg">{agent.name}</CardTitle>
-                          <CardDescription>{agent.type} • {agent.role}</CardDescription>
-                        </div>
-                     </div>
-                     <div className="flex items-center space-x-2">
-                       <Badge className={cn(
-                         "text-xs",
-                         agent.status === 'completed' ? 'bg-green-100 text-green-800' : 
-                         agent.status === 'in_progress' ? 'bg-blue-100 text-blue-800' : 
-                         agent.status === 'error' ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800'
-                       )}>
-                         {agent.status}
-                       </Badge>
-                       {agent.confidence && (
-                         <span className="text-sm text-muted-foreground">{agent.confidence}% confidence</span>
-                       )}
-                     </div>
-                   </div>
-                 </CardHeader>
-                 <CardContent className="space-y-4">
-                    <div>
-                      <p className="text-sm font-medium mb-2">Current Action</p>
-                      <p className="text-sm text-muted-foreground">{agent.current_action || 'No current action'}</p>
-                      <Progress value={agent.progress} className="h-2 mt-2" />
-                      <p className="text-xs text-muted-foreground mt-1">{agent.progress}% complete</p>
-                    </div>
-                   
-                   {agent.findings && agent.findings.length > 0 && (
-                     <div>
-                       <p className="text-sm font-medium mb-2">Key Findings</p>
-                       <div className="space-y-1">
-                         {agent.findings.map((finding: string, idx: number) => (
-                           <div key={idx} className="flex items-start space-x-2">
-                             <div className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-2 flex-shrink-0" />
-                             <span className="text-sm">{finding}</span>
-                           </div>
-                         ))}
-                       </div>
-                     </div>
-                   )}
-                   
-                   {agent.recommendations && agent.recommendations.length > 0 && (
-                     <div>
-                       <p className="text-sm font-medium mb-2">Recommendations</p>
-                       <div className="space-y-1">
-                         {agent.recommendations.map((rec: string, idx: number) => (
-                           <div key={idx} className="flex items-start space-x-2">
-                             <div className="w-1.5 h-1.5 rounded-full bg-green-500 mt-2 flex-shrink-0" />
-                             <span className="text-sm">{rec}</span>
-                           </div>
-                         ))}
-                       </div>
-                     </div>
-                   )}
-                   
-                   <div className="text-xs text-muted-foreground">
-                     Started: {formatTimeAgo(agent.started_at)}
-                     {agent.completed_at && ` • Completed: ${formatTimeAgo(agent.completed_at)}`}
-                   </div>
-                 </CardContent>
-               </Card>
-             ))}
-           </div>
-         )}
-         
-         {/* Legacy Agents */}
-         {incident.active_agents && incident.active_agents.length > 0 && (
-           <div className="space-y-4">
-             {incident.sre_execution && incident.sre_execution.agents && incident.sre_execution.agents.length > 0 && (
-               <h3 className="text-lg font-medium flex items-center space-x-2">
-                 <Bot className="h-5 w-5 text-gray-600" />
-                 <span>Legacy Agents</span>
-               </h3>
-             )}
-             {incident.active_agents.map((agent: any, index: number) => (
-              <Card key={agent.id} className="border-l-4 border-l-blue-500">
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center">
-                        <Bot className="h-5 w-5 text-blue-600" />
-                      </div>
-                       <div>
-                         <CardTitle className="text-lg">{agent.agent_name}</CardTitle>
-                         <CardDescription>{agent.agent_type} • {agent.role}</CardDescription>
-                       </div>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Badge className={cn(
-                        "text-xs",
-                        agent.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
-                      )}>
-                        {agent.status}
-                      </Badge>
-                      {agent.confidence && (
-                        <span className="text-sm text-muted-foreground">{agent.confidence}% confidence</span>
-                      )}
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                   <div>
-                     <p className="text-sm font-medium mb-2">Current Action</p>
-                     <p className="text-sm text-muted-foreground">{agent.current_action}</p>
-                     <Progress value={agent.progress} className="h-2 mt-2" />
-                     <p className="text-xs text-muted-foreground mt-1">{agent.progress}% complete</p>
-                   </div>
-                  
-                  <div>
-                    <p className="text-sm font-medium mb-2">Key Findings</p>
-                    <div className="space-y-1">
-                      {agent.findings.map((finding: string, idx: number) => (
-                        <div key={idx} className="flex items-start space-x-2">
-                          <div className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-2 flex-shrink-0" />
-                          <span className="text-sm">{finding}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <p className="text-sm font-medium mb-2">Recommendations</p>
-                    <div className="space-y-1">
-                      {agent.recommendations.map((rec: string, idx: number) => (
-                        <div key={idx} className="flex items-start space-x-2">
-                          <div className="w-1.5 h-1.5 rounded-full bg-green-500 mt-2 flex-shrink-0" />
-                          <span className="text-sm">{rec}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-           </div>
-         )}
-         
-         {/* No agents */}
-         {(!incident.sre_execution || !incident.sre_execution.agents || incident.sre_execution.agents.length === 0) &&
-          (!incident.active_agents || incident.active_agents.length === 0) && (
-           <Card>
-             <CardContent className="p-6">
-               <div className="text-center py-8">
-                 <Bot className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                 <h3 className="text-lg font-medium mb-2">No Agents Active</h3>
-                 <p className="text-muted-foreground">
-                   SRE agents will appear here when they are deployed to handle this incident
-                 </p>
-               </div>
-             </CardContent>
-           </Card>
-         )}
-       </div>
-    ),
-    
-    timeline: (
-      <div className="space-y-4">
-        {/* SRE Timeline */}
-        {incident.sre_timeline && incident.sre_timeline.length > 0 && (
-          <div className="space-y-4">
-            <h3 className="text-lg font-medium flex items-center space-x-2">
-              <Bot className="h-5 w-5 text-blue-600" />
-              <span>SRE Agent Timeline</span>
-            </h3>
-            {incident.sre_timeline.map((event: any, index: number) => {
-              const isCompleted = event.status === 'completed';
-              const isInProgress = event.status === 'running';
-              
-              return (
-                <Card key={event.id} className={cn(
-                  "border-l-4",
-                  isCompleted ? 'border-l-green-500' :
-                  isInProgress ? 'border-l-blue-500' : 'border-l-gray-300'
-                )}>
-                  <CardContent className="p-4">
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-3">
-                          <div className={cn(
-                            "w-8 h-8 rounded-full flex items-center justify-center",
-                            isCompleted ? 'bg-green-100 text-green-600' :
-                            isInProgress ? 'bg-blue-100 text-blue-600' : 'bg-gray-100 text-gray-600'
-                          )}>
-                            {isCompleted && <CheckCircle2 className="h-4 w-4" />}
-                            {isInProgress && <Activity className="h-4 w-4" />}
-                            {!isCompleted && !isInProgress && <Clock className="h-4 w-4" />}
-                          </div>
-                          <div>
-                            <h4 className="font-medium">{event.title}</h4>
-                            <p className="text-sm text-muted-foreground">
-                              Step {event.step_number} • {event.action_type}
-                            </p>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <Badge className={cn(
-                            "text-xs mb-1",
-                            isCompleted ? 'bg-green-100 text-green-800' :
-                            isInProgress ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'
-                          )}>
-                            {event.status}
-                          </Badge>
-                          <p className="text-xs text-muted-foreground">
-                            {formatTimeAgo(event.timestamp)}
-                          </p>
-                          {event.duration_seconds && (
-                            <p className="text-xs text-muted-foreground">
-                              Duration: {event.duration_seconds}s
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                      
-                      {event.description && (
-                        <p className="text-sm">{event.description}</p>
-                      )}
-                      
-                      {event.metadata && Object.keys(event.metadata).length > 0 && (
-                        <div className="text-xs text-muted-foreground">
-                          <details>
-                            <summary className="cursor-pointer">View metadata</summary>
-                            <pre className="mt-2 bg-gray-100 dark:bg-gray-800 p-2 rounded">
-                              {JSON.stringify(event.metadata, null, 2)}
-                            </pre>
-                          </details>
-                        </div>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
-              );
-            })}
           </div>
-        )}
-        
-        {/* Regular Timeline */}
-        {incident.timeline && incident.timeline.length > 0 && (
-          <div className="space-y-4">
-            {incident.sre_timeline && incident.sre_timeline.length > 0 && (
-              <h3 className="text-lg font-medium flex items-center space-x-2">
-                <Clock className="h-5 w-5 text-gray-600" />
-                <span>General Timeline</span>
-              </h3>
-            )}
-            {incident.timeline.map((event: any, index: number) => {
-              // Use entry_type if status is not available, with fallback
-              const status = event.status || event.entry_type || 'info';
-              const isCompleted = status === 'completed' || status === 'resolved';
-              const isInProgress = status === 'in_progress' || status === 'action';
-              
-              return (
-                <Card key={index} className={cn(
-                  "border-l-4",
-                  isCompleted ? 'border-l-green-500' :
-                  isInProgress ? 'border-l-blue-500' : 'border-l-gray-300'
-                )}>
-                  <CardContent className="p-4">
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-3">
-                          <div className={cn(
-                            "w-8 h-8 rounded-full flex items-center justify-center",
-                            isCompleted ? 'bg-green-100 text-green-600' :
-                            isInProgress ? 'bg-blue-100 text-blue-600' : 'bg-gray-100 text-gray-600'
-                          )}>
-                            {isCompleted && <CheckCircle2 className="h-4 w-4" />}
-                            {isInProgress && <Activity className="h-4 w-4" />}
-                            {!isCompleted && !isInProgress && <Clock className="h-4 w-4" />}
-                          </div>
-                          <div>
-                            <h4 className="font-medium">{event.title || event.action || 'Timeline Event'}</h4>
-                            <p className="text-sm text-muted-foreground">{event.source || event.agent || 'System'}</p>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <Badge className={cn(
-                            "text-xs mb-1",
-                            isCompleted ? 'bg-green-100 text-green-800' :
-                            isInProgress ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'
-                          )}>
-                            {status.replace('_', ' ')}
-                          </Badge>
-                          <p className="text-xs text-muted-foreground">
-                            {formatTimeAgo(event.occurred_at || event.timestamp)}
-                          </p>
-                        </div>
-                      </div>
-                      
-                      <p className="text-sm">{event.description || 'No description available'}</p>
-                      {event.details && <p className="text-xs text-muted-foreground">{event.details}</p>}
-                    </div>
-                  </CardContent>
-                </Card>
-              );
-            })}
+        </div>
+      )
+    }
+    
+    if (step.step_type === 'TOOL_RESULT') {
+      return (
+        <div className="mt-4 p-4 bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-xl border border-green-200 dark:border-green-700">
+          <div className="flex items-center space-x-2 mb-3">
+            <div className="p-1.5 bg-green-200 dark:bg-green-700 rounded-lg">
+              <Terminal className="h-4 w-4 text-green-700 dark:text-green-300" />
+            </div>
+            <span className="font-semibold text-green-900 dark:text-green-100">Result: {data.tool_name}</span>
           </div>
-        )}
-        
-        {/* No timeline data */}
-        {(!incident.sre_timeline || incident.sre_timeline.length === 0) && 
-         (!incident.timeline || incident.timeline.length === 0) && (
-          <Card>
-            <CardContent className="p-6">
-              <div className="text-center py-8">
-                <Clock className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                <h3 className="text-lg font-medium mb-2">No Timeline Available</h3>
-                <p className="text-muted-foreground">
-                  Timeline events will appear here as the incident progresses
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-      </div>
-    ),
+          <div className="space-y-3">
+            <div>
+              <div className="text-sm font-medium text-green-800 dark:text-green-200 mb-2">Output:</div>
+              <pre className="text-xs bg-white dark:bg-gray-900 p-3 rounded-lg border border-green-200 dark:border-green-700 max-h-48 overflow-auto font-mono">
+                {data.result}
+              </pre>
+            </div>
+          </div>
+        </div>
+      )
+    }
     
-     verification: (
-       <div className="space-y-4">
-         {/* SRE Verifications */}
-         {incident.sre_verifications && incident.sre_verifications.length > 0 && (
-           <div className="space-y-4">
-             <h3 className="text-lg font-medium flex items-center space-x-2">
-               <Zap className="h-5 w-5 text-blue-600" />
-               <span>SRE Agent Verifications</span>
-             </h3>
-             {incident.sre_verifications.map((verification: any, index: number) => (
-               <Card key={verification.id} className={cn(
-                 "border-l-4",
-                 verification.success ? 'border-l-green-500' : 'border-l-red-500'
-               )}>
-                 <CardContent className="p-4">
-                   <div className="space-y-3">
-                     <div className="flex items-center justify-between">
-                       <h4 className="font-medium">{verification.description}</h4>
-                       <Badge className={cn(
-                         "text-xs",
-                         verification.success ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                       )}>
-                         {verification.success ? 'Passed' : 'Failed'}
-                       </Badge>
-                     </div>
-                     
-                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                       <div>
-                         <span className="text-muted-foreground">Type:</span>
-                         <span className="ml-2 font-medium">{verification.verification_type}</span>
-                       </div>
-                       {verification.expected_result && (
-                         <div>
-                           <span className="text-muted-foreground">Expected:</span>
-                           <span className="ml-2 font-medium">{verification.expected_result}</span>
-                         </div>
-                       )}
-                       {verification.actual_result && (
-                         <div>
-                           <span className="text-muted-foreground">Actual:</span>
-                           <span className="ml-2 font-medium">{verification.actual_result}</span>
-                         </div>
-                       )}
-                     </div>
-                     
-                     {verification.command_executed && (
-                       <div>
-                         <p className="text-sm font-medium mb-1">Command Executed</p>
-                         <code className="text-xs bg-gray-100 dark:bg-gray-800 p-2 rounded block">
-                           {verification.command_executed}
-                         </code>
-                       </div>
-                     )}
-                     
-                     <p className="text-xs text-muted-foreground">
-                       Executed: {formatTimeAgo(verification.timestamp)}
-                     </p>
-                   </div>
-                 </CardContent>
-               </Card>
-             ))}
-           </div>
-         )}
-         
-         {/* Legacy Verification Gates */}
-         {incident.verification_gates && incident.verification_gates.length > 0 && (
-           <div className="space-y-4">
-             <h3 className="text-lg font-medium flex items-center space-x-2">
-               <CheckCircle2 className="h-5 w-5 text-green-600" />
-               <span>Verification Gates</span>
-             </h3>
-             {incident.verification_gates.map((gate: any, index: number) => (
-              <Card key={index} className={cn(
-                "border-l-4",
-                gate.status === 'completed' ? 'border-l-green-500' :
-                gate.status === 'in_progress' ? 'border-l-blue-500' : 'border-l-gray-300'
-              )}>
-                <CardContent className="p-4">
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <h4 className="font-medium">{gate.name}</h4>
-                      <Badge className={cn(
-                        "text-xs",
-                        gate.status === 'completed' ? 'bg-green-100 text-green-800' :
-                        gate.status === 'in_progress' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'
-                      )}>
-                        {gate.status.replace('_', ' ')}
-                      </Badge>
-                    </div>
-                    
-                    <p className="text-sm text-muted-foreground">{gate.description}</p>
-                    
-                    <div className="space-y-2">
-                      <Progress value={gate.progress} className="h-2" />
-                      <div className="flex justify-between text-xs">
-                        <span>Progress: {gate.progress}%</span>
-                        <span>Time remaining: {gate.time_remaining}</span>
-                      </div>
-                    </div>
-                    
-                     <div className="grid grid-cols-2 gap-4 text-sm">
-                       <div>
-                         <span className="text-muted-foreground">Target:</span>
-                         <span className="ml-2 font-medium">{gate.target_value}</span>
-                       </div>
-                       <div>
-                         <span className="text-muted-foreground">Current:</span>
-                         <span className="ml-2 font-medium">{gate.current_value}</span>
-                       </div>
-                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-           </div>
-         )}
-         
-         {/* No verification data */}
-         {(!incident.sre_verifications || incident.sre_verifications.length === 0) && 
-          (!incident.verification_gates || incident.verification_gates.length === 0) && (
-           <Card>
-             <CardContent className="p-6">
-               <div className="text-center py-8">
-                 <CheckCircle2 className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                 <h3 className="text-lg font-medium mb-2">No Verifications Available</h3>
-                 <p className="text-muted-foreground">
-                   {incident.sre_execution ? 
-                     "The SRE agent has not performed any verifications yet" :
-                     "Verification steps will appear here when the SRE agent starts testing"
-                   }
-                 </p>
-               </div>
-             </CardContent>
-           </Card>
-         )}
-       </div>
-     ),
+    if (step.step_type === 'AGENT_RESPONSE') {
+      return (
+        <div className="mt-4 p-4 bg-gradient-to-r from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 rounded-xl border border-orange-200 dark:border-orange-700">
+          <div className="flex items-center space-x-2 mb-3">
+            <div className="p-1.5 bg-orange-200 dark:bg-orange-700 rounded-lg">
+              <MessageSquare className="h-4 w-4 text-orange-700 dark:text-orange-300" />
+            </div>
+            <span className="font-semibold text-orange-900 dark:text-orange-100">Agent Analysis</span>
+          </div>
+          <div className="prose prose-sm dark:prose-invert max-w-none">
+            <div className="text-sm text-orange-900 dark:text-orange-100 whitespace-pre-wrap leading-relaxed">
+              {formatText(data.message)}
+            </div>
+          </div>
+        </div>
+      )
+    }
     
-    hypotheses: (
-      <div className="space-y-4">
-        {incident.sre_hypotheses && incident.sre_hypotheses.length > 0 ? (
-          incident.sre_hypotheses.map((hypothesis: any, index: number) => (
-            <Card key={hypothesis.id} className={cn(
-              "border-l-4",
-              hypothesis.status === 'confirmed' ? 'border-l-green-500' :
-              hypothesis.status === 'testing' ? 'border-l-blue-500' :
-              hypothesis.status === 'rejected' ? 'border-l-red-500' : 'border-l-gray-300'
-            )}>
-              <CardContent className="p-4">
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <h4 className="font-medium">Hypothesis {index + 1}</h4>
-                    <div className="flex items-center space-x-2">
-                      <Badge className={cn(
-                        "text-xs",
-                        hypothesis.status === 'confirmed' ? 'bg-green-100 text-green-800' :
-                        hypothesis.status === 'testing' ? 'bg-blue-100 text-blue-800' :
-                        hypothesis.status === 'rejected' ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800'
-                      )}>
-                        {hypothesis.status}
-                      </Badge>
-                      {hypothesis.confidence_score && (
-                        <span className="text-sm text-muted-foreground">
-                          {hypothesis.confidence_score}% confidence
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                  
-                  <p className="text-sm">{hypothesis.hypothesis_text}</p>
-                  
-                  {hypothesis.reasoning && (
-                    <div>
-                      <p className="text-sm font-medium mb-1">Reasoning</p>
-                      <p className="text-sm text-muted-foreground">{hypothesis.reasoning}</p>
-                    </div>
-                  )}
-                  
-                  {hypothesis.supporting_evidence && Object.keys(hypothesis.supporting_evidence).length > 0 && (
-                    <div>
-                      <p className="text-sm font-medium mb-2">Supporting Evidence</p>
-                      <div className="space-y-1">
-                        {Object.entries(hypothesis.supporting_evidence).map(([key, value]: [string, any]) => (
-                          <div key={key} className="flex items-start space-x-2">
-                            <div className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-2 flex-shrink-0" />
-                            <span className="text-sm"><strong>{key}:</strong> {String(value)}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                  
-                  <p className="text-xs text-muted-foreground">
-                    Created: {formatTimeAgo(hypothesis.created_at)}
-                    {hypothesis.updated_at && hypothesis.updated_at !== hypothesis.created_at && 
-                      ` • Updated: ${formatTimeAgo(hypothesis.updated_at)}`
-                    }
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          ))
-        ) : (
-          <Card>
-            <CardContent className="p-6">
-              <div className="text-center py-8">
-                <Brain className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                <h3 className="text-lg font-medium mb-2">No Hypotheses Available</h3>
-                <p className="text-muted-foreground">
-                  {incident.sre_execution ? 
-                    "The SRE agent has not generated any hypotheses yet" :
-                    "AI-generated hypotheses will appear here when SRE agent analyzes the incident"
-                  }
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-      </div>
-    ),
+    if (step.step_type === 'INCIDENT_RECEIVED') {
+      return (
+        <div className="mt-4 p-4 bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-xl border border-blue-200 dark:border-blue-700">
+          <div className="flex items-center space-x-2 mb-3">
+            <div className="p-1.5 bg-blue-200 dark:bg-blue-700 rounded-lg">
+              <AlertTriangle className="h-4 w-4 text-blue-700 dark:text-blue-300" />
+            </div>
+            <span className="font-semibold text-blue-900 dark:text-blue-100">Incident Received</span>
+          </div>
+          <div className="space-y-2 text-sm text-blue-900 dark:text-blue-100">
+            <div><strong>Description:</strong> {formatText(data.incident_description)}</div>
+            <div><strong>Status:</strong> <Badge variant="outline" className="ml-1">{data.status}</Badge></div>
+          </div>
+        </div>
+      )
+    }
     
-    provenance: (
-      <div className="space-y-4">
-        {incident.sre_provenance && incident.sre_provenance.length > 0 ? (
-          incident.sre_provenance.map((prov: any, index: number) => (
-            <Card key={prov.id} className="border-l-4 border-l-purple-500">
-              <CardContent className="p-4">
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <h4 className="font-medium">Step {prov.step_id}</h4>
-                    <div className="flex items-center space-x-2">
-                      <Badge className="text-xs bg-purple-100 text-purple-800">
-                        {prov.reasoning_type}
-                      </Badge>
-                      {prov.confidence && (
-                        <span className="text-sm text-muted-foreground">
-                          {prov.confidence}% confidence
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                  
-                  {prov.parent_step_id && (
-                    <p className="text-sm text-muted-foreground">
-                      Follows from step: {prov.parent_step_id}
-                    </p>
-                  )}
-                  
-                  {prov.reasoning_process && (
-                    <div>
-                      <p className="text-sm font-medium mb-1">Reasoning Process</p>
-                      <p className="text-sm">{prov.reasoning_process}</p>
-                    </div>
-                  )}
-                  
-                  {prov.input_data && Object.keys(prov.input_data).length > 0 && (
-                    <div>
-                      <p className="text-sm font-medium mb-2">Input Data</p>
-                      <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded text-xs">
-                        <pre>{JSON.stringify(prov.input_data, null, 2)}</pre>
-                      </div>
-                    </div>
-                  )}
-                  
-                  {prov.output_conclusion && (
-                    <div>
-                      <p className="text-sm font-medium mb-1">Conclusion</p>
-                      <p className="text-sm">{prov.output_conclusion}</p>
-                    </div>
-                  )}
-                  
-                  <div className="flex justify-between text-xs text-muted-foreground">
-                    <span>Component: {prov.agent_component || 'Unknown'}</span>
-                    <span>{formatTimeAgo(prov.timestamp)}</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))
-        ) : (
-          <Card>
-            <CardContent className="p-6">
-              <div className="text-center py-8">
-                <GitBranch className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                <h3 className="text-lg font-medium mb-2">No Provenance Data Available</h3>
-                <p className="text-muted-foreground">
-                  {incident.sre_execution ? 
-                    "The SRE agent has not recorded any reasoning chains yet" :
-                    "Exact snippets from logs, metrics, and tickets will appear here when SRE agent analyzes data"
-                  }
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-      </div>
-    ),
+    if (step.step_type === 'INCIDENT_COMPLETED') {
+      return (
+        <div className="mt-4 p-4 bg-gradient-to-r from-emerald-50 to-emerald-100 dark:from-emerald-900/20 dark:to-emerald-800/20 rounded-xl border border-emerald-200 dark:border-emerald-700">
+          <div className="flex items-center space-x-2 mb-3">
+            <div className="p-1.5 bg-emerald-200 dark:bg-emerald-700 rounded-lg">
+              <CheckCircle2 className="h-4 w-4 text-emerald-700 dark:text-emerald-300" />
+            </div>
+            <span className="font-semibold text-emerald-900 dark:text-emerald-100">Execution Completed</span>
+          </div>
+          <div className="grid grid-cols-2 gap-4 text-sm text-emerald-900 dark:text-emerald-100">
+            <div><strong>Status:</strong> {data.status}</div>
+            <div><strong>Total Steps:</strong> {data.total_steps}</div>
+            <div><strong>Duration:</strong> {formatDuration(data.duration_seconds)}</div>
+            <div className="col-span-2"><strong>Summary:</strong> {formatText(data.summary)}</div>
+          </div>
+        </div>
+      )
+    }
     
-    evidence: (
-      <div className="space-y-4">
-        {incident.sre_evidence && incident.sre_evidence.length > 0 ? (
-          incident.sre_evidence.map((evidence: any, index: number) => (
-            <Card key={evidence.id} className={cn(
-              "border-l-4",
-              evidence.relevance_score && evidence.relevance_score > 80 ? 'border-l-green-500' :
-              evidence.relevance_score && evidence.relevance_score > 60 ? 'border-l-yellow-500' : 'border-l-blue-500'
-            )}>
-              <CardContent className="p-4">
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <h4 className="font-medium">{evidence.evidence_type} from {evidence.source}</h4>
-                    <div className="flex items-center space-x-2">
-                      {evidence.relevance_score && (
-                        <Badge className={cn(
-                          "text-xs",
-                          evidence.relevance_score > 80 ? 'bg-green-100 text-green-800' :
-                          evidence.relevance_score > 60 ? 'bg-yellow-100 text-yellow-800' : 'bg-blue-100 text-blue-800'
-                        )}>
-                          {evidence.relevance_score}% relevant
-                        </Badge>
-                      )}
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <p className="text-sm font-medium mb-1">Evidence Content</p>
-                    <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded text-sm max-h-40 overflow-y-auto">
-                      <pre className="whitespace-pre-wrap">{evidence.content}</pre>
-                    </div>
-                  </div>
-                  
-                  {evidence.metadata && Object.keys(evidence.metadata).length > 0 && (
-                    <div>
-                      <p className="text-sm font-medium mb-2">Metadata</p>
-                      <div className="space-y-1">
-                        {Object.entries(evidence.metadata).map(([key, value]: [string, any]) => (
-                          <div key={key} className="flex items-start space-x-2">
-                            <span className="text-xs text-muted-foreground min-w-0 flex-shrink-0">{key}:</span>
-                            <span className="text-xs">{String(value)}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                  
-                  <p className="text-xs text-muted-foreground">
-                    Collected: {formatTimeAgo(evidence.collected_at)}
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          ))
-        ) : (
-          <Card>
-            <CardContent className="p-6">
-              <div className="text-center py-8">
-                <Code className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                <h3 className="text-lg font-medium mb-2">No Evidence Available</h3>
-                <p className="text-muted-foreground">
-                  {incident.sre_execution ? 
-                    "The SRE agent has not collected any evidence yet" :
-                    "Comprehensive evidence search and analysis will appear here when SRE agent investigates"
-                  }
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-      </div>
-    )
+    return null
   }
 
   return (
     <AppLayout>
-      <div className="space-y-6">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <Button variant="outline" size="sm" onClick={() => navigate('/app/incidents')}>
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Back
-            </Button>
-             <div>
-               <h1 className="text-2xl font-bold">{incident.title}</h1>
-               <p className="text-muted-foreground">{incident.incident_id}</p>
-             </div>
-          </div>
-          <div className="flex items-center space-x-2">
-            <Button variant="outline" size="sm">
-              <Download className="mr-2 h-4 w-4" />
-              Export
-            </Button>
-            <Button variant="outline" size="sm">
-              <Share2 className="mr-2 h-4 w-4" />
-              Share
-            </Button>
+      <div className="space-y-8">
+        {/* Enhanced Hero Header */}
+        <div className="relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-cyan-500/10 dark:from-blue-500/5 dark:via-purple-500/5 dark:to-cyan-500/5"></div>
+          <div className="relative bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 rounded-2xl p-8">
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-6 lg:space-y-0">
+              <div className="flex items-start space-x-4">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => navigate('/app/incidents')}
+                  className="shrink-0 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                >
+                  <ArrowLeft className="mr-2 h-4 w-4" />
+                  Back
+                </Button>
+                <div className="space-y-2">
+                  <div className="flex items-center space-x-3">
+                    <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+                      <Monitor className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+                    </div>
+                    <div>
+                      <h1 className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 dark:from-gray-100 dark:via-blue-200 dark:to-purple-200 bg-clip-text text-transparent">
+                        Incident Execution
+                      </h1>
+                      <p className="text-lg text-muted-foreground">
+                        Real-time analysis for <span className="font-mono font-semibold text-foreground">{executionLogs.incident_id}</span>
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-4 text-sm text-muted-foreground">
+                    <div className="flex items-center space-x-1">
+                      <Timer className="h-4 w-4" />
+                      <span>Started {formatTimestamp(executionLogs.start_time)}</span>
+                    </div>
+                    <div className="flex items-center space-x-1">
+                      <Activity className="h-4 w-4" />
+                      <span>Duration {formatDuration(executionLogs.duration_seconds)}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="flex flex-col space-y-3">
+                <Badge 
+                  className={cn("text-sm px-4 py-2 font-medium shadow-lg", getStatusColor(executionLogs.status))}
+                >
+                  <CheckCircle2 className="mr-2 h-4 w-4" />
+                  {executionLogs.status}
+                </Badge>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-foreground">{executionLogs.logs.length}/{executionLogs.step_count}</div>
+                  <div className="text-xs text-muted-foreground">Steps Available</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Status Overview */}
-        <Card>
-          <CardContent className="p-6">
-            <div className="grid gap-6 md:grid-cols-4">
-              <div className="space-y-2">
-                <p className="text-sm text-muted-foreground">Status</p>
-                <Badge className={cn("text-sm", getStatusColor(incident.status))}>
-                  {incident.status.charAt(0).toUpperCase() + incident.status.slice(1)}
-                </Badge>
+        {/* Enhanced Overview Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Card className="relative overflow-hidden group hover:shadow-lg transition-all duration-300">
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-pink-500/5"></div>
+            <CardContent className="relative p-6">
+              <div className="flex items-center justify-between mb-4">
+                <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
+                  <Clock className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                </div>
+                <Badge variant="outline" className="text-xs">Timing</Badge>
               </div>
               <div className="space-y-2">
-                <p className="text-sm text-muted-foreground">Severity</p>
-                <Badge className={cn("text-sm", getSeverityColor(incident.severity))}>
-                  {incident.severity.toUpperCase()}
-                </Badge>
+                <div>
+                  <div className="text-2xl font-bold text-foreground">
+                    {formatDuration(executionLogs.duration_seconds)}
+                  </div>
+                  <div className="text-xs text-muted-foreground">Total Duration</div>
+                </div>
+                <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
+                  <div className="text-sm text-muted-foreground">
+                    Last updated {formatTimestamp(executionLogs.last_updated)}
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="relative overflow-hidden group hover:shadow-lg transition-all duration-300">
+            <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-emerald-500/5"></div>
+            <CardContent className="relative p-6">
+              <div className="flex items-center justify-between mb-4">
+                <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg">
+                  <TrendingUp className="h-5 w-5 text-green-600 dark:text-green-400" />
+                </div>
+                <Badge variant="outline" className="text-xs">Performance</Badge>
               </div>
               <div className="space-y-2">
-                <p className="text-sm text-muted-foreground">Confidence</p>
-                <p className="text-lg font-bold">{incident.confidence}%</p>
+                <div>
+                  <div className="text-2xl font-bold text-foreground">
+                    {executionLogs.step_count}
+                  </div>
+                  <div className="text-xs text-muted-foreground">Total Steps</div>
+                </div>
+                <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
+                  <div className="text-sm text-muted-foreground">
+                    Avg: {(executionLogs.duration_seconds / executionLogs.step_count).toFixed(1)}s per step
+                  </div>
+                </div>
               </div>
-               <div className="space-y-2">
-                 <p className="text-sm text-muted-foreground">Est. Resolution</p>
-                 <p className="text-lg font-bold">{incident.estimated_resolution}</p>
-               </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Enhanced Execution Logs */}
+        <Card className="relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-50/50 via-white to-gray-50/50 dark:from-gray-900/50 dark:via-gray-800/50 dark:to-gray-900/50"></div>
+          <CardHeader className="relative">
+            <CardTitle className="flex items-center space-x-2 text-xl">
+              <div className="p-2 bg-gray-100 dark:bg-gray-800 rounded-lg">
+                <Layers className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+              </div>
+              <span>Execution Timeline</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="relative">
+            <div className="space-y-6">
+              {executionLogs.logs.map((step, index) => {
+                const isLatest = index === executionLogs.logs.length - 1
+                const isCompleted = index < executionLogs.logs.length - 1
+                return (
+                  <div 
+                    key={step.step_number} 
+                    className={cn(
+                      "relative transition-all duration-700"
+                    )}
+                  >
+                    {/* Timeline Line */}
+                    {index < executionLogs.logs.length - 1 && (
+                      <div className="absolute left-6 top-12 w-0.5 h-full bg-gradient-to-b from-gray-300 to-transparent dark:from-gray-600"></div>
+                    )}
+                    
+                    <div className={cn(
+                      "relative flex items-start space-x-4 p-6 rounded-2xl border transition-all duration-500",
+                      isLatest 
+                        ? "bg-primary/5 border-primary/20 shadow-lg shadow-primary/10" 
+                        : isCompleted 
+                          ? "bg-gray-50/50 dark:bg-gray-800/50 border-gray-200/50 dark:border-gray-700/50" 
+                          : "bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700"
+                    )}>
+                      {/* Step Icon */}
+                      <div className={cn(
+                        "flex items-center justify-center w-12 h-12 rounded-full border-2 transition-all duration-500",
+                        isLatest 
+                          ? "bg-primary text-white border-primary shadow-lg" 
+                          : isCompleted 
+                            ? "bg-green-100 text-green-600 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-700" 
+                            : "bg-gray-100 text-gray-500 border-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-700"
+                      )}>
+                        {getStepIcon(step.step_type)}
+                      </div>
+                      
+                      {/* Step Content */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center space-x-3">
+                            <Badge className={cn("text-xs font-medium", getStepTypeColor(step.step_type))}>
+                              {step.step_type.replace('_', ' ')}
+                            </Badge>
+                            <span className="text-sm font-semibold text-foreground">
+                              Step {step.step_number}
+                            </span>
+                          </div>
+                          <div className="flex items-center space-x-2 text-xs text-muted-foreground">
+                            <Clock className="h-3 w-3" />
+                            <span>{formatTimestamp(step.timestamp)}</span>
+                          </div>
+                        </div>
+                        
+                        {renderLogData(step)}
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
+              
+              {/* Completion Message */}
+              {executionLogs.status === 'COMPLETED' && (
+                <div className="text-center py-8 border-t border-gray-200 dark:border-gray-700">
+                  <div className="inline-flex items-center space-x-2 px-4 py-2 bg-green-100 dark:bg-green-900/30 rounded-full">
+                    <CheckCircle2 className="h-5 w-5 text-green-600 dark:text-green-400" />
+                    <span className="text-sm font-medium text-green-800 dark:text-green-200">
+                      Execution completed successfully
+                    </span>
+                  </div>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
-
-        {/* Navigation Tabs */}
-        <div className="border-b">
-          <nav className="flex space-x-8">
-            {[
-              { id: 'execution', label: 'Execution', icon: Play },
-              { id: 'agents', label: 'Agents', icon: Bot },
-              { id: 'timeline', label: 'Timeline', icon: Clock },
-              { id: 'hypotheses', label: 'Hypotheses', icon: Brain },
-              { id: 'verification', label: 'Verification', icon: CheckCircle2 },
-              { id: 'provenance', label: 'Provenance', icon: GitBranch },
-              { id: 'evidence', label: 'Evidence', icon: Code }
-            ].map((tab) => {
-              const Icon = tab.icon
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id as any)}
-                  className={cn(
-                    "flex items-center space-x-2 py-4 px-1 border-b-2 font-medium text-sm transition-colors",
-                    activeTab === tab.id
-                      ? "border-primary text-primary"
-                      : "border-transparent text-muted-foreground hover:text-foreground hover:border-muted-foreground"
-                  )}
-                >
-                  <Icon className="h-4 w-4" />
-                  <span>{tab.label}</span>
-                </button>
-              )
-            })}
-          </nav>
-        </div>
-
-        {/* Tab Content */}
-        <div>
-          {tabContent[activeTab]}
-        </div>
       </div>
     </AppLayout>
   )
