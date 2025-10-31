@@ -17,7 +17,8 @@ const getApiBaseUrl = () => {
   //   // Production mode - use live API
   //   return 'https://api.integraite.com/api/v1'
   // }
-    return 'https://api.integraite.com/api/v1'
+    // return 'https://api.integraite.com/api/v1'
+    return "http://localhost:8000/api/v1"
 }
 
 const API_BASE_URL = getApiBaseUrl()

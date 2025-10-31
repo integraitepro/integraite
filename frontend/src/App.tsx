@@ -61,7 +61,7 @@ function App() {
             <Route path="/app/onboarding" element={<AuthGuard><OnboardingPage /></AuthGuard>} />
           <Route path="/app/agents" element={<AuthGuard><AgentsPage /></AuthGuard>} />
           <Route path="/app/incidents" element={<AuthGuard><IncidentsPage /></AuthGuard>} />
-          <Route path="/app/incidents/:id" element={<AuthGuard><IncidentDetailPage /></AuthGuard>} />
+          <Route path="/app/incident/:id" element={<AuthGuard><IncidentDetailPage /></AuthGuard>} />
           <Route path="/app/integrations" element={<AuthGuard><AppIntegrationsPage /></AuthGuard>} />
             <Route path="/app/automations" element={<AuthGuard><AutomationsPage /></AuthGuard>} />
             <Route path="/app/evidence" element={<AuthGuard><EvidencePage /></AuthGuard>} />

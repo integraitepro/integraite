@@ -16,6 +16,7 @@ from app.api.v1.endpoints import (
     audit,
     dashboard,
     onboarding,
+    sre_agent,
 )
 
 # Create main API router
@@ -33,3 +34,4 @@ api_router.include_router(billing.router, prefix="/billing", tags=["Billing"])
 api_router.include_router(audit.router, prefix="/audit", tags=["Audit"])
 api_router.include_router(dashboard.router, prefix="/dashboard", tags=["Dashboard"])
 api_router.include_router(onboarding.router, prefix="/onboarding", tags=["Onboarding"])
+api_router.include_router(sre_agent.router, prefix="/incident", tags=["SRE Agent"])

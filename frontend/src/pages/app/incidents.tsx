@@ -228,7 +228,7 @@ export function IncidentsPage() {
               key={incident.id} 
               className="hover:shadow-md transition-all duration-200 cursor-pointer border-l-4"
               style={{ borderLeftColor: incident.severity === 'critical' ? '#dc2626' : incident.severity === 'high' ? '#ea580c' : incident.severity === 'medium' ? '#ca8a04' : '#16a34a' }}
-              onClick={() => navigate(`/app/incidents/${incident.id}`)}
+              onClick={() => navigate(`/app/incident/${incident.incident_id}`)}
             >
               <CardContent className="p-6">
                 <div className="space-y-4">

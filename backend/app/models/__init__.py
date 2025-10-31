@@ -7,6 +7,15 @@ from app.models.integration import IntegrationProvider, UserIntegration, Integra
 from app.models.automation import Automation, AutomationExecution
 from app.models.audit import AuditLog
 from app.models.billing import Subscription, Usage
+from app.models.sre_execution import (
+    SREIncidentExecution,
+    IncidentExecutionLog,
+    SRETimelineEntry,
+    SREHypothesis,
+    SREVerification,
+    SREEvidence,
+    SREProvenance
+)
 
 __all__ = [
     "User",
@@ -26,4 +35,11 @@ __all__ = [
     "AuditLog",
     "Subscription",
     "Usage",
+    "SREIncidentExecution",
+    "IncidentExecutionLog",
+    "SRETimelineEntry",
+    "SREHypothesis",
+    "SREVerification",
+    "SREEvidence",
+    "SREProvenance",
 ]

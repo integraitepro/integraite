@@ -73,6 +73,105 @@ export interface IncidentExecution {
   completed_at?: string
 }
 
+// SRE Execution types
+export interface SRETimelineEntry {
+  id: number
+  step_number: number
+  timestamp: string
+  action_type: string
+  title: string
+  description?: string
+  status: string
+  duration_seconds?: number
+  metadata?: Record<string, any>
+}
+
+export interface SREHypothesis {
+  id: number
+  hypothesis_text: string
+  confidence_score?: number
+  reasoning?: string
+  supporting_evidence?: Record<string, any>
+  status: string
+  created_at: string
+  updated_at?: string
+}
+
+export interface SREVerification {
+  id: number
+  verification_type: string
+  description: string
+  command_executed?: string
+  expected_result?: string
+  actual_result?: string
+  success: boolean
+  timestamp: string
+  metadata?: Record<string, any>
+}
+
+export interface SREEvidence {
+  id: number
+  evidence_type: string
+  source: string
+  content: string
+  metadata?: Record<string, any>
+  collected_at: string
+  relevance_score?: number
+}
+
+export interface SREProvenance {
+  id: number
+  step_id: string
+  parent_step_id?: string
+  reasoning_type: string
+  input_data?: Record<string, any>
+  reasoning_process?: string
+  output_conclusion?: string
+  confidence?: number
+  timestamp: string
+  agent_component?: string
+}
+
+export interface SREExecutionAgent {
+  id: string
+  name: string
+  type: string
+  role: string
+  status: string
+  current_action?: string
+  progress: number
+  confidence?: number
+  findings: string[]
+  recommendations: string[]
+  started_at: string
+  completed_at?: string
+}
+
+export interface SREIncidentExecution {
+  id: number
+  incident_number: string
+  incident_title?: string
+  incident_description?: string
+  target_ip?: string
+  priority?: string
+  category?: string
+  assignment_group?: string
+  status: string
+  agent_name: string
+  started_at: string
+  completed_at?: string
+  resolution_summary?: string
+  final_hypothesis?: string
+  resolution_steps?: Record<string, any>[]
+  verification_results?: Record<string, any>
+  timeline_entries: SRETimelineEntry[]
+  hypotheses: SREHypothesis[]
+  verifications: SREVerification[]
+  evidence: SREEvidence[]
+  provenance: SREProvenance[]
+  agents: SREExecutionAgent[]
+}
+
 export interface IncidentDetail {
   id: number
   incident_id: string
@@ -107,6 +206,14 @@ export interface IncidentDetail {
   verification_gates: VerificationGate[]
   executions: IncidentExecution[]
   current_progress: number
+  
+  // SRE execution data
+  sre_execution?: SREIncidentExecution
+  sre_timeline: SRETimelineEntry[]
+  sre_hypotheses: SREHypothesis[]
+  sre_verifications: SREVerification[]
+  sre_evidence: SREEvidence[]
+  sre_provenance: SREProvenance[]
 }
 
 export interface IncidentListItem {
@@ -183,7 +290,7 @@ export const incidentsService = {
     return api.get<{ incidents: IncidentListItem[] }>(url)
   },
 
-  async getIncident(id: number): Promise<IncidentDetail> {
+  async getIncident(id: string): Promise<IncidentDetail> {
     return api.get<IncidentDetail>(`/incidents/${id}`)
   },
 
@@ -191,11 +298,11 @@ export const incidentsService = {
     return api.post<IncidentDetail>('/incidents', data)
   },
 
-  async updateIncident(id: number, data: UpdateIncidentRequest): Promise<IncidentDetail> {
+  async updateIncident(id: string, data: UpdateIncidentRequest): Promise<IncidentDetail> {
     return api.put<IncidentDetail>(`/incidents/${id}`, data)
   },
 
-  async deleteIncident(id: number): Promise<{ message: string }> {
+  async deleteIncident(id: string): Promise<{ message: string }> {
     return api.delete<{ message: string }>(`/incidents/${id}`)
   },
 }

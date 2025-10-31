@@ -5,6 +5,12 @@ Incident API schemas
 from pydantic import BaseModel, Field
 from typing import Optional, List, Dict, Any
 from datetime import datetime
+from app.schemas.sre_execution import (
+    SREIncidentExecutionResponse, SRETimelineEntryResponse, 
+    SREHypothesisResponse, SREVerificationResponse, 
+    SREEvidenceResponse, SREProvenanceResponse,
+    SREExecutionSummary
+)
 
 
 class IncidentBase(BaseModel):
@@ -170,6 +176,14 @@ class IncidentDetailResponse(BaseModel):
     verification_gates: List[VerificationGateResponse] = []
     executions: List[IncidentExecutionResponse] = []
     current_progress: float = 0.0  # Overall execution progress
+    
+    # SRE Execution data (real data from SRE agent)
+    sre_execution: Optional[SREIncidentExecutionResponse] = None
+    sre_timeline: List[SRETimelineEntryResponse] = []
+    sre_hypotheses: List[SREHypothesisResponse] = []
+    sre_verifications: List[SREVerificationResponse] = []
+    sre_evidence: List[SREEvidenceResponse] = []
+    sre_provenance: List[SREProvenanceResponse] = []
 
     model_config = {"from_attributes": True}
 
@@ -192,6 +206,9 @@ class IncidentListResponse(BaseModel):
     last_update: datetime
     affected_services: List[str] = []
     actions: List[Dict[str, str]] = []  # Recent actions from timeline
+    
+    # SRE execution summary
+    sre_execution_summary: Optional[SREExecutionSummary] = None
 
     model_config = {"from_attributes": True}
 

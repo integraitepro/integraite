@@ -38,6 +38,22 @@ class Settings(BaseSettings):
     STRIPE_WEBHOOK_SECRET: Optional[str] = Field(default=None)
     SENDGRID_API_KEY: Optional[str] = Field(default=None)
     
+    # ServiceNow Integration
+    SERVICENOW_INSTANCE_URL: Optional[str] = Field(default=None)
+    SERVICENOW_USERNAME: Optional[str] = Field(default=None)
+    SERVICENOW_PASSWORD: Optional[str] = Field(default=None)
+    SERVICENOW_TABLE: str = Field(default="incident")
+    
+    # AI/LLM APIs
+    OPENAI_API_KEY: Optional[str] = Field(default=None)
+    
+    # SSH Configuration for SRE Agent
+    SSH_PRIVATE_KEY_PATH: Optional[str] = Field(default=None)
+    SSH_USERNAME: str = Field(default="sre-agent")
+    SSH_PORT: int = Field(default=22)
+    SSH_TIMEOUT: int = Field(default=30)
+    ENABLE_REAL_SSH: bool = Field(default=False)
+    
     # Redis
     REDIS_URL: str = Field(default="redis://localhost:6379")
     
@@ -59,6 +75,16 @@ class Settings(BaseSettings):
     DEFAULT_ORGANIZATION_PLAN: str = Field(default="free")
     MAX_AGENTS_FREE_PLAN: int = Field(default=5)
     MAX_AGENTS_TEAM_PLAN: int = Field(default=50)
+    
+    # ServiceNow Integration (additional fields from .env)
+    # Note: Core ServiceNow fields are already defined above
+    
+    # Additional settings that might be defined in environment
+    JWT_SECRET_KEY: Optional[str] = Field(default=None)
+    JWT_ALGORITHM: str = Field(default="HS256")
+    LOG_LEVEL: str = Field(default="INFO")
+    RATE_LIMIT_ENABLED: bool = Field(default=True)
+    RATE_LIMIT_PERIOD: int = Field(default=60)
 
 
 # Global settings instance

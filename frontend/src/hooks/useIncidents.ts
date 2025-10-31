@@ -28,7 +28,7 @@ export const useIncidents = (query: IncidentListQuery = {}) => {
   })
 }
 
-export const useIncident = (id: number | null) => {
+export const useIncident = (id: string | null) => {
   return useQuery({
     queryKey: ['incident', 'detail', id],
     queryFn: () => incidentsService.getIncident(id!),
@@ -58,7 +58,7 @@ export const useUpdateIncident = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({ id, data }: { id: number; data: UpdateIncidentRequest }) =>
+    mutationFn: ({ id, data }: { id: string; data: UpdateIncidentRequest }) =>
       incidentsService.updateIncident(id, data),
     onSuccess: (_, { id }) => {
       // Invalidate specific incident, list, and stats
